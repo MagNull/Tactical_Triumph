@@ -22,6 +22,8 @@ class TACTICAL_TRIUMPH_API UHeroGameplayAbility : public UGameplayAbility
 	GENERATED_BODY()
 public:
 	UHeroGameplayAbility();
+
+	void AddTrigger(FAbilityTriggerData TriggerData);
 	
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Abilities")
 	EAbilityInputID AbilityInputID;

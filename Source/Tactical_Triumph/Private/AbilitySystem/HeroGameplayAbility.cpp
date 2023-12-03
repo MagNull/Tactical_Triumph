@@ -3,3 +3,8 @@
 UHeroGameplayAbility::UHeroGameplayAbility()
 {
 }
+
+void UHeroGameplayAbility::AddTrigger(FAbilityTriggerData TriggerData)
+{
+	AbilityTriggers.Emplace(TriggerData);
+}

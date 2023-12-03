@@ -1,14 +1,12 @@
 ﻿#include "Tactical_Triumph/Public/AbilitySystem/Hero.h"
 #include "AbilitySystemComponent.h"
+#include "AbilitySystem/HeroGameplayAbility.h"
+#include "Kismet/GameplayStatics.h"
 #include "Tactical_Triumph/Public/AbilitySystem/HeroAttributeSet.h"
-#include "Tactical_Triumph/Public/AbilitySystem/HeroGameplayAbility.h"
-#include "AbilitySystemBlueprintLibrary.h"
 
 AHero::AHero()
 {
-	bAbilitiesIsInitialized = false;
-
-	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Static Mesh"));
+	Mesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Skeletal Mesh"));
 
 	AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("GAS Componens"));
 	AbilitySystemComponent->SetIsReplicated(true);
@@ -16,44 +14,15 @@ AHero::AHero()
 	Attributes = CreateDefaultSubobject<UHeroAttributeSet>(TEXT("Attributes"));
 }
 
-void AHero::BeginPlay()
+void AHero::GrantAbilityWithLineTag(const TSubclassOf<UHeroGameplayAbility> Ability, FGameplayTag TriggerTag)
 {
-	Super::BeginPlay();
+	FAbilityTriggerData TriggerData;
+	TriggerData.TriggerSource = EGameplayAbilityTriggerSource::OwnedTagAdded;
+	TriggerData.TriggerTag = TriggerTag;
 
-	AddStartupAbilities();
-}
-
-void AHero::AddStartupAbilities()
-{
-	check(AbilitySystemComponent)
-	if (bAbilitiesIsInitialized)
-		return;
-
-	//Granting abilities
-	for (TPair<FGameplayTag, TSubclassOf<UHeroGameplayAbility>>& Ability : Abilities)
-	{
-		AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec{
-			Ability.Value, 1, static_cast<int32>(Ability.Value.GetDefaultObject()->AbilityInputID), this
-		});
-	}
-
-	//Granting passives effect
-	for (const auto StartupEffect : StartupEffects)
-	{
-		FGameplayEffectContextHandle effectContext = AbilitySystemComponent->MakeEffectContext();
-		effectContext.AddSourceObject(this);
-
-		FGameplayEffectSpecHandle effectHandle =
-			AbilitySystemComponent->MakeOutgoingSpec(StartupEffect, 1, effectContext);
-
-		if (effectHandle.IsValid())
-		{
-			AbilitySystemComponent->ApplyGameplayEffectSpecToTarget(
-				*effectHandle.Data.Get(), AbilitySystemComponent);
-		}
-	}
-
-	bAbilitiesIsInitialized = true;
+	UHeroGameplayAbility* AbilityObj = Ability.GetDefaultObject();
+	AbilityObj->AddTrigger(TriggerData);
+	AbilitySystemComponent->GiveAbility(AbilityObj);
 }
 
 float AHero::GetHealth() const

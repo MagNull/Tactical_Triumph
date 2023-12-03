@@ -19,12 +19,11 @@ public:
 	AHero();
 	friend UHeroAttributeSet;
 
-protected:
-	virtual void BeginPlay() override;
-
 public:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override { return AbilitySystemComponent; }
-	void AddStartupAbilities();
+
+	UFUNCTION(BlueprintCallable)
+	void GrantAbilityWithLineTag(TSubclassOf<UHeroGameplayAbility> ability, FGameplayTag TriggerTag);
 
 	UFUNCTION(BlueprintCallable)
 	float GetHealth() const;
@@ -49,28 +48,20 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnHealthChanged(float deltaValue, const FGameplayTagContainer& eventTags);
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	USkeletalMeshComponent* Mesh;
+
 protected:
 	void HandleDamage(float DamageAmount, const FGameplayTagContainer DamageTags,
 	                  UAbilitySystemComponent* DamageInstigator, UAbilitySystemComponent* Target);
 
 	void HandleHealthChanged(float deltaValue, const FGameplayTagContainer& eventTags);
-	
+
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UAbilitySystemComponent* AbilitySystemComponent;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UStaticMeshComponent* Mesh;
-
 private:
-	bool bAbilitiesIsInitialized;
-
-
 	UPROPERTY(EditAnywhere, Category = "Attributes")
 	TObjectPtr<UHeroAttributeSet> Attributes;
-
-	UPROPERTY(EditAnywhere)
-	TArray<TSubclassOf<UGameplayEffect>> StartupEffects;
-
-	UPROPERTY(EditAnywhere, Category = "Abilities")
-	TMap<FGameplayTag, TSubclassOf<UHeroGameplayAbility>> Abilities;
 };

@@ -8,7 +8,6 @@
 
 FHitResult AHeroAbilityTargeting::PerformTrace(AActor* InSourceActor)
 {
-	
 	APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	check(PC);
 
