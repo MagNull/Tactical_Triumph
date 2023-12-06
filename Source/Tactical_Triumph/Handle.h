@@ -4,7 +4,6 @@
 
 #include "DA_Card.h"
 #include "CoreMinimal.h"
-#include "Components/ActorComponent.h"
 #include "Handle.generated.h"
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )

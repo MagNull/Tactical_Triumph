@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "Hero/Hero.h"
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
 #include "DA_Card.generated.h"
@@ -40,6 +41,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	UStaticMesh* GetMesh() { return Mesh; }
+
+	UFUNCTION(BlueprintCallable)
+	AHero* GetHero() { return Hero; }
 	
 	UPROPERTY(EditAnywhere, Category = "CardData")
 	FString CharacterName;
@@ -67,4 +71,7 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "CardData")
 	UStaticMesh* Mesh;
+	
+	UPROPERTY(EditAnywhere, Category = "CardData")
+	AHero* Hero;
 };

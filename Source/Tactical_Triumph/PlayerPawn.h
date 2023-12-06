@@ -26,6 +26,9 @@ protected:
 	UPROPERTY()
 	class UHandle* handle_;
 
+	UPROPERTY()
+	class USquad* Squad;
+
 public:	 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

@@ -11,9 +11,17 @@ class ISquad;
 UENUM(BlueprintType)
 enum class ERow
 {
-	Vanguard UMETA(DisplayName = "Авангард"),
-	Flank UMETA(DisplayName = "Фланк"),
-	Back UMETA(DisplayName = "Тыл")
+	Vanguard = 0 UMETA(DisplayName = "Авангард"),
+	Flank = 1 UMETA(DisplayName = "Фланк"),
+	Back = 2 UMETA(DisplayName = "Тыл")
+};
+
+UENUM(BlueprintType)
+enum class EColumn
+{
+	Left = 0 UMETA(DisplayName = "Левый"),
+	Mid = 1 UMETA(DisplayName = "Центр"),
+	Right = 2 UMETA(DisplayName = "Правый")
 };
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
