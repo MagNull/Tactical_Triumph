@@ -7,6 +7,7 @@ enum class EColumn;
 class ISquad
 {
 public:
+	virtual ~ISquad() = default;
 	virtual void GetNeighbours(AHero* originHero, AHero* forward, AHero* back) const = 0;
 	virtual TArray<AHero*> GetHeroesInColumn(EColumn column) const  = 0;
 	virtual ERow GetRow(AHero* hero) const = 0;
