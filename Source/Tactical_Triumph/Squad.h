@@ -5,8 +5,8 @@
 #include "CoreMinimal.h"
 #include "DropZone.h"
 #include "ISquad.h"
-#include "Hero/Hero.h"
-#include "Tactical_Triumph/AbylitySystem/CastingSystem/RowBenefit.h"
+#include "AbilitySystem/Hero.h"
+#include "AbilitySystem/SquadLines.h"
 #include "Components/ActorComponent.h"
 #include "Squad.generated.h"
 

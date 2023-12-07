@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Hero/Hero.h"
-#include "Tactical_Triumph/AbylitySystem/CastingSystem/RowBenefit.h"
+#include "AbilitySystem/Hero.h"
+#include "AbilitySystem/SquadLines.h"
 #include "GameFramework/Actor.h"
 #include "DropZone.generated.h"
 

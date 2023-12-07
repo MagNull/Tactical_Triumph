@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Hero/Hero.h"
+#include "AbilitySystem/Hero.h"
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
 #include "DA_Card.generated.h"
