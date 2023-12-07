@@ -20,16 +20,16 @@ public:
 	USquad();
 
 	UFUNCTION(BlueprintCallable)
-	virtual TArray<AHero*> GetHeroesInColumn(EColumn column) const override;
+	virtual TArray<AHero*> GetHeroesInColumn(ESquadColumn column) const override;
 
 	UFUNCTION(BlueprintCallable)
 	virtual void GetNeighbours(AHero* originHero, AHero* outForward, AHero* outBack) const override;
 
 	UFUNCTION(BlueprintCallable)
-	virtual ERow GetRow(AHero* hero) const override;
+	virtual ESquadRow GetRow(AHero* hero) const override;
 
 	UFUNCTION(BlueprintCallable)
-	virtual TArray<AHero*> GetHeroesInRow(ERow row) const override;
+	virtual TArray<AHero*> GetHeroesInRow(ESquadRow row) const override;
 	
 	UFUNCTION(BlueprintCallable)
 	virtual AHero* GetLeader() const override;
@@ -40,7 +40,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void AddHero(ADropZone* NewDropZone);
 
-	AHero* GetHero(ERow row, EColumn column) const;
+	AHero* GetHero(ESquadRow row, ESquadColumn column) const;
 	
 protected:
 	UPROPERTY(EditAnywhere)

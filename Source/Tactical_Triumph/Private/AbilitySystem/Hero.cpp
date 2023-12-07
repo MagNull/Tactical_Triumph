@@ -1,28 +1,15 @@
 ﻿#include "Tactical_Triumph/Public/AbilitySystem/Hero.h"
 #include "AbilitySystemComponent.h"
-#include "AbilitySystem/HeroGameplayAbility.h"
-#include "Kismet/GameplayStatics.h"
 #include "Tactical_Triumph/Public/AbilitySystem/HeroAttributeSet.h"
 
 AHero::AHero()
 {
 	Mesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Skeletal Mesh"));
 
-	AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("GAS Componens"));
+	AbilitySystemComponent = CreateDefaultSubobject<UHeroAbilitySystemComponent>(TEXT("Ability System Component"));
 	AbilitySystemComponent->SetIsReplicated(true);
 
 	Attributes = CreateDefaultSubobject<UHeroAttributeSet>(TEXT("Attributes"));
-}
-
-void AHero::GrantAbilityWithLineTag(const TSubclassOf<UHeroGameplayAbility> Ability, FGameplayTag TriggerTag)
-{
-	FAbilityTriggerData TriggerData;
-	TriggerData.TriggerSource = EGameplayAbilityTriggerSource::OwnedTagAdded;
-	TriggerData.TriggerTag = TriggerTag;
-
-	UHeroGameplayAbility* AbilityObj = Ability.GetDefaultObject();
-	AbilityObj->AddTrigger(TriggerData);
-	AbilitySystemComponent->GiveAbility(AbilityObj);
 }
 
 float AHero::GetHealth() const
@@ -51,10 +38,10 @@ float AHero::GetMaxHealth() const
 }
 
 void AHero::HandleDamage(float DamageAmount, const FGameplayTagContainer DamageTags,
-                         UAbilitySystemComponent* DamageInstigator, UAbilitySystemComponent* Target)
+						 UAbilitySystemComponent* DamageInstigator, UAbilitySystemComponent* Target)
 {
 	OnDamaged(DamageAmount, DamageTags,
-	          DamageInstigator, Target);
+			  DamageInstigator, Target);
 }
 
 void AHero::HandleHealthChanged(float deltaValue, const FGameplayTagContainer& eventTags)

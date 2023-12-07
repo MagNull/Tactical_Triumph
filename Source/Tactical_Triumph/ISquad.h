@@ -1,17 +1,17 @@
 ﻿#pragma once
 
 class AHero;
-enum class ERow;
-enum class EColumn;
+enum class ESquadRow;
+enum class ESquadColumn;
 
 class ISquad
 {
 public:
 	virtual ~ISquad() = default;
 	virtual void GetNeighbours(AHero* originHero, AHero* forward, AHero* back) const = 0;
-	virtual TArray<AHero*> GetHeroesInColumn(EColumn column) const  = 0;
-	virtual ERow GetRow(AHero* hero) const = 0;
-	virtual TArray<AHero*> GetHeroesInRow(ERow row) const = 0;
+	virtual TArray<AHero*> GetHeroesInColumn(ESquadColumn column) const  = 0;
+	virtual ESquadRow GetRow(AHero* hero) const = 0;
+	virtual TArray<AHero*> GetHeroesInRow(ESquadRow row) const = 0;
 	virtual AHero* GetLeader() const = 0;
 	virtual UObject* GetPlayerOwner() const = 0;
 };

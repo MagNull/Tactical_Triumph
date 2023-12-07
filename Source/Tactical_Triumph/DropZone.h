@@ -28,11 +28,11 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY(EditAnywhere)
-	EColumn Column;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	ESquadColumn Column;
 	
-	UPROPERTY(EditAnywhere)
-	ERow Row;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	ESquadRow Row;
 	
 	UFUNCTION(BlueprintCallable)
 	bool GetIsOccupied();

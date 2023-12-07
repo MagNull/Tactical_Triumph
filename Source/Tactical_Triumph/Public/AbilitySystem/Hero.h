@@ -1,13 +1,14 @@
 ﻿#pragma once
 
 #include "CoreMinimal.h"
+#include "AbilitySystemComponent.h"
 #include "AbilitySystemInterface.h"
 #include "GameplayTagContainer.h"
+#include "HeroAbilitySystemComponent.h"
 
 #include "Hero.generated.h"
 
 class UHeroAttributeSet;
-class UHeroGameplayAbility;
 class UGameplayEffect;
 
 UCLASS()
@@ -20,10 +21,10 @@ public:
 	friend UHeroAttributeSet;
 
 public:
-	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override { return AbilitySystemComponent; }
-
-	UFUNCTION(BlueprintCallable)
-	void GrantAbilityWithLineTag(TSubclassOf<UHeroGameplayAbility> ability, FGameplayTag TriggerTag);
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override
+	{
+		return Cast<UAbilitySystemComponent>(AbilitySystemComponent);
+	}
 
 	UFUNCTION(BlueprintCallable)
 	float GetHealth() const;
@@ -42,7 +43,7 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnDamaged(float DamageAmount, const FGameplayTagContainer DamageTags,
-	               UAbilitySystemComponent* DamageInstigator, UAbilitySystemComponent* Target);
+				   UAbilitySystemComponent* DamageInstigator, UAbilitySystemComponent* Target);
 
 
 	UFUNCTION(BlueprintImplementableEvent)
@@ -51,15 +52,14 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	USkeletalMeshComponent* Mesh;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UHeroAbilitySystemComponent* AbilitySystemComponent;
+
 protected:
 	void HandleDamage(float DamageAmount, const FGameplayTagContainer DamageTags,
 	                  UAbilitySystemComponent* DamageInstigator, UAbilitySystemComponent* Target);
 
 	void HandleHealthChanged(float deltaValue, const FGameplayTagContainer& eventTags);
-
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	UAbilitySystemComponent* AbilitySystemComponent;
 
 private:
 	UPROPERTY(EditAnywhere, Category = "Attributes")

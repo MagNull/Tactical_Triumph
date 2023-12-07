@@ -11,7 +11,7 @@ USquad::USquad()
 	PrimaryComponentTick.bCanEverTick = true;
 }
 
-TArray<AHero*> USquad::GetHeroesInColumn(EColumn column) const
+TArray<AHero*> USquad::GetHeroesInColumn(ESquadColumn column) const
 {
 	TArray<AHero*> ResultArray;
 	for (const auto DropZone : DropZones)
@@ -43,14 +43,14 @@ void USquad::GetNeighbours(AHero* originHero, AHero* outForward, AHero* outBack)
 		return;
 	}
 
-	if (FindDropZone->Row != ERow::Vanguard)
-		outForward = GetHero(static_cast<ERow>(static_cast<int>(FindDropZone->Row) + 1), FindDropZone->Column);
+	if (FindDropZone->Row != ESquadRow::Vanguard)
+		outForward = GetHero(static_cast<ESquadRow>(static_cast<int>(FindDropZone->Row) + 1), FindDropZone->Column);
 
-	if (FindDropZone->Row == ERow::Back)
-		outBack = GetHero(static_cast<ERow>(static_cast<int>(FindDropZone->Row) - 1), FindDropZone->Column);
+	if (FindDropZone->Row == ESquadRow::Back)
+		outBack = GetHero(static_cast<ESquadRow>(static_cast<int>(FindDropZone->Row) - 1), FindDropZone->Column);
 }
 
-ERow USquad::GetRow(AHero* hero) const
+ESquadRow USquad::GetRow(AHero* hero) const
 {
 	for (const auto DropZone : DropZones)
 	{
@@ -62,7 +62,7 @@ ERow USquad::GetRow(AHero* hero) const
 	return {};
 }
 
-TArray<AHero*> USquad::GetHeroesInRow(ERow row) const
+TArray<AHero*> USquad::GetHeroesInRow(ESquadRow row) const
 {
 	TArray<AHero*> ResultArray;
 	for (const auto DropZone : DropZones)
@@ -77,7 +77,7 @@ TArray<AHero*> USquad::GetHeroesInRow(ERow row) const
 
 AHero* USquad::GetLeader() const
 {
-	return GetHero(ERow::Vanguard, EColumn::Mid);
+	return GetHero(ESquadRow::Vanguard, ESquadColumn::Mid);
 }
 
 UObject* USquad::GetPlayerOwner() const
@@ -90,7 +90,7 @@ void USquad::AddHero(ADropZone* NewDropZone)
 	DropZones.Add(NewDropZone);
 }
 
-AHero* USquad::GetHero(ERow row, EColumn column) const
+AHero* USquad::GetHero(ESquadRow row, ESquadColumn column) const
 {
 	for (const auto DropZone : DropZones)
 	{
