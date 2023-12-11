@@ -13,7 +13,6 @@ enum class EAbilityInputID : uint8
 	None,
 	Cancel,
 	Confirm,
-	Punch
 };
 
 UCLASS()
@@ -24,7 +23,11 @@ public:
 	UHeroGameplayAbility();
 
 	void AddTrigger(FAbilityTriggerData TriggerData);
+	void AddRequiredTag(const FGameplayTag& tag);
 	
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Abilities")
 	EAbilityInputID AbilityInputID;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Abilities")
+	bool bIsSpell;
 };

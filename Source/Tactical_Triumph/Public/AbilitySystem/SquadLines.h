@@ -1,15 +1,15 @@
 #pragma once
 
-UENUM()
-enum class ERow
+UENUM(BlueprintType)
+enum class ESquadRow
 {
 	Vanguard,
 	Flank,
 	Back
 };
 
-UENUM()
-enum class EColumn
+UENUM(BlueprintType)
+enum class ESquadColumn
 {
 	Top,
 	Mid,
