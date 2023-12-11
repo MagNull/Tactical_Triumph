@@ -3,10 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AbilitySystem/Hero.h"
 #include "AbilitySystem/SquadLines.h"
 #include "GameFramework/Actor.h"
 #include "DropZone.generated.h"
+
+class AHero;
 
 UCLASS()
 class TACTICAL_TRIUMPH_API ADropZone : public AActor
@@ -35,12 +36,11 @@ public:
 	ESquadRow Row;
 	
 	UFUNCTION(BlueprintCallable)
-	bool GetIsOccupied();
+	bool GetIsOccupied() const;
 
 	UFUNCTION(BlueprintCallable)
-	AHero* GetHero();
+	AHero* GetHero() const;
 	
 	UFUNCTION(BlueprintCallable)
 	void SetHero(AHero* NewHero);
-	
 };

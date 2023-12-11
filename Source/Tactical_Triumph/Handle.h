@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include "DA_Card.h"
 #include "CoreMinimal.h"
 #include "Handle.generated.h"
 
@@ -24,5 +23,5 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	UPROPERTY(EditAnywhere)
-	TArray<UDA_Card*> cards;
+	TArray<class UDA_Card*> cards;
 };

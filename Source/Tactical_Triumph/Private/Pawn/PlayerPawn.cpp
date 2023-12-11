@@ -1,9 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "PlayerPawn.h"
-#include "Handle.h"
-#include "Squad.h"
+#include "Pawn/PlayerPawn.h"
+#include "DragAndDrop//DA_Card.h"
+#include "Tactical_Triumph/Handle.h"
+#include "Squad/Squad.h"
 
 // Sets default values
 APlayerPawn::APlayerPawn()

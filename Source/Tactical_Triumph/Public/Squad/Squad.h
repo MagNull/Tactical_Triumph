@@ -3,12 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "DropZone.h"
 #include "ISquad.h"
-#include "AbilitySystem/Hero.h"
-#include "AbilitySystem/SquadLines.h"
 #include "Components/ActorComponent.h"
 #include "Squad.generated.h"
+
+class AHero;
+class ADropZone;
+enum class ESquadColumn;
+enum class ESquadRow;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class TACTICAL_TRIUMPH_API USquad : public UActorComponent, public ISquad
