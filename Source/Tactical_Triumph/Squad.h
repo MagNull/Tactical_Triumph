@@ -10,47 +10,45 @@
 #include "Components/ActorComponent.h"
 #include "Squad.generated.h"
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class TACTICAL_TRIUMPH_API USquad : public UActorComponent, public ISquad
 {
 	GENERATED_BODY()
-	
-public:	
-	// Sets default values for this actor's properties
+
+public:
 	USquad();
 
 	UFUNCTION(BlueprintCallable)
-	virtual TArray<AHero*> GetHeroesInColumn(ESquadColumn column) const override;
+	virtual TArray<AHero*> GetHeroesInColumn(ESquadColumn Column) const override;
 
 	UFUNCTION(BlueprintCallable)
-	virtual void GetNeighbours(AHero* originHero, AHero* outForward, AHero* outBack) const override;
+	virtual void GetNeighbours(AHero* OriginHero, AHero* OutForward, AHero* OutBack) const override;
 
 	UFUNCTION(BlueprintCallable)
-	virtual ESquadRow GetRow(AHero* hero) const override;
+	virtual ESquadRow GetRow(AHero* Hero) const override;
 
 	UFUNCTION(BlueprintCallable)
-	virtual TArray<AHero*> GetHeroesInRow(ESquadRow row) const override;
-	
+	virtual TArray<AHero*> GetHeroesInRow(ESquadRow Row) const override;
+
 	UFUNCTION(BlueprintCallable)
 	virtual AHero* GetLeader() const override;
-	
+
 	UFUNCTION(BlueprintCallable)
 	virtual UObject* GetPlayerOwner() const override;
 
 	UFUNCTION(BlueprintCallable)
 	void AddHero(ADropZone* NewDropZone);
 
-	AHero* GetHero(ESquadRow row, ESquadColumn column) const;
+	UFUNCTION(BlueprintCallable)
+	virtual void AddSquadEffect(FGameplayEffectSpecHandle EffectSpec) override;
 	
-protected:
+	UFUNCTION(BlueprintCallable)
+	virtual TArray<FGameplayEffectSpecHandle> GetSquadEffects() const override { return SquadEffects; }
+
+	AHero* GetHero(ESquadRow Row, ESquadColumn Column) const;
+
+private:
 	UPROPERTY(EditAnywhere)
 	TArray<ADropZone*> DropZones;
-	
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-public:	
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
+	TArray<FGameplayEffectSpecHandle> SquadEffects;
 };

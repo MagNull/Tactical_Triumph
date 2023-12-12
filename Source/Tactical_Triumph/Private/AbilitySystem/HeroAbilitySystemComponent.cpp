@@ -1,4 +1,4 @@
-#include "HeroAbilitySystemComponent.h"
+#include "AbilitySystem/HeroAbilitySystemComponent.h"
 
 void UHeroAbilitySystemComponent::SetAbilitySquadLineMap(TMap<FGameplayTag, TSubclassOf<UHeroGameplayAbility>> map)
 {
@@ -21,6 +21,9 @@ void UHeroAbilitySystemComponent::BeginDestroy()
 void UHeroAbilitySystemComponent::OnEffectApplied(UAbilitySystemComponent* ASC, const FGameplayEffectSpec& EffectSpec,
                                                   FActiveGameplayEffectHandle ActiveEffectHandle) const
 {
+	if(EffectSpec.DynamicGrantedTags.Num() == 0)
+		return;
+	
 	ASC->ClearAllAbilities();
 	for (auto TagAbilityPair : TagToAbilityMap)
 	{

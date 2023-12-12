@@ -52,14 +52,14 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	USkeletalMeshComponent* Mesh;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	UHeroAbilitySystemComponent* AbilitySystemComponent;
-
 protected:
 	void HandleDamage(float DamageAmount, const FGameplayTagContainer DamageTags,
 	                  UAbilitySystemComponent* DamageInstigator, UAbilitySystemComponent* Target);
 
 	void HandleHealthChanged(float deltaValue, const FGameplayTagContainer& eventTags);
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UHeroAbilitySystemComponent* AbilitySystemComponent;
 
 private:
 	UPROPERTY(EditAnywhere, Category = "Attributes")

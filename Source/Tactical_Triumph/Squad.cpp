@@ -1,13 +1,7 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "Squad.h"
 
-// Sets default values
 USquad::USquad()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 }
 
@@ -24,13 +18,13 @@ TArray<AHero*> USquad::GetHeroesInColumn(ESquadColumn column) const
 	return ResultArray;
 }
 
-void USquad::GetNeighbours(AHero* originHero, AHero* outForward, AHero* outBack) const
+void USquad::GetNeighbours(AHero* OriginHero, AHero* OutForward, AHero* OutBack) const
 {
 	const ADropZone* FindDropZone = nullptr;
 
 	for (const auto DropZone : DropZones)
 	{
-		if (DropZone->GetHero() == originHero)
+		if (DropZone->GetHero() == OriginHero)
 		{
 			FindDropZone = DropZone;
 		}
@@ -38,23 +32,23 @@ void USquad::GetNeighbours(AHero* originHero, AHero* outForward, AHero* outBack)
 
 	if (FindDropZone == nullptr)
 	{
-		outForward = nullptr;
-		outBack = nullptr;
+		OutForward = nullptr;
+		OutBack = nullptr;
 		return;
 	}
 
 	if (FindDropZone->Row != ESquadRow::Vanguard)
-		outForward = GetHero(static_cast<ESquadRow>(static_cast<int>(FindDropZone->Row) + 1), FindDropZone->Column);
+		OutForward = GetHero(static_cast<ESquadRow>(static_cast<int>(FindDropZone->Row) + 1), FindDropZone->Column);
 
-	if (FindDropZone->Row == ESquadRow::Back)
-		outBack = GetHero(static_cast<ESquadRow>(static_cast<int>(FindDropZone->Row) - 1), FindDropZone->Column);
+	if (FindDropZone->Row != ESquadRow::Back)
+		OutBack = GetHero(static_cast<ESquadRow>(static_cast<int>(FindDropZone->Row) - 1), FindDropZone->Column);
 }
 
-ESquadRow USquad::GetRow(AHero* hero) const
+ESquadRow USquad::GetRow(AHero* Hero) const
 {
 	for (const auto DropZone : DropZones)
 	{
-		if (DropZone->GetHero() == hero)
+		if (DropZone->GetHero() == Hero)
 		{
 			return DropZone->Row;
 		}
@@ -62,12 +56,12 @@ ESquadRow USquad::GetRow(AHero* hero) const
 	return {};
 }
 
-TArray<AHero*> USquad::GetHeroesInRow(ESquadRow row) const
+TArray<AHero*> USquad::GetHeroesInRow(ESquadRow Row) const
 {
 	TArray<AHero*> ResultArray;
 	for (const auto DropZone : DropZones)
 	{
-		if (DropZone->Row == row)
+		if (DropZone->Row == Row)
 		{
 			ResultArray.Add(DropZone->GetHero());
 		}
@@ -77,7 +71,7 @@ TArray<AHero*> USquad::GetHeroesInRow(ESquadRow row) const
 
 AHero* USquad::GetLeader() const
 {
-	return GetHero(ESquadRow::Vanguard, ESquadColumn::Mid);
+	return GetHero(ESquadRow::Flank, ESquadColumn::Mid);
 }
 
 UObject* USquad::GetPlayerOwner() const
@@ -87,28 +81,33 @@ UObject* USquad::GetPlayerOwner() const
 
 void USquad::AddHero(ADropZone* NewDropZone)
 {
+	const AHero* Hero = NewDropZone->GetHero();
+	for (auto EffectSpec : SquadEffects)
+	{
+		Hero->GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*EffectSpec.Data);
+	}
 	DropZones.Add(NewDropZone);
 }
 
-AHero* USquad::GetHero(ESquadRow row, ESquadColumn column) const
+void USquad::AddSquadEffect(FGameplayEffectSpecHandle EffectSpec)
+{
+	SquadEffects.Add(EffectSpec);
+	for (const auto DropZone : DropZones)
+	{
+		AHero* Hero = DropZone->GetHero();
+		Hero->GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*EffectSpec.Data);
+		UE_LOG(LogTemp, Display, TEXT("Hero %s get %s"), *Hero->GetName(), *EffectSpec.Data->ToSimpleString())
+	}
+}
+
+AHero* USquad::GetHero(ESquadRow Row, ESquadColumn Column) const
 {
 	for (const auto DropZone : DropZones)
 	{
-		if (DropZone->Row == row && DropZone->Column == column)
+		if (DropZone->Row == Row && DropZone->Column == Column)
 		{
 			return DropZone->GetHero();
 		}
 	}
 	return nullptr;
-}
-
-// Called when the game starts or when spawned
-void USquad::BeginPlay()
-{
-	Super::BeginPlay();
-}
-
-void USquad::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 }
