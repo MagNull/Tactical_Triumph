@@ -2,10 +2,11 @@
 
 #pragma once
 
-#include "DA_Card.h"
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "PlayerPawn.generated.h"
+
+class UDA_Card;
 
 UCLASS()
 class TACTICAL_TRIUMPH_API APlayerPawn : public APawn

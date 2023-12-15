@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include "AbilitySystem/Hero.h"
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
 #include "DA_Card.generated.h"
