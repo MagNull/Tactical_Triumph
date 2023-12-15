@@ -18,13 +18,16 @@ public:
 	virtual TArray<AHero*> GetHeroesInColumn(ESquadColumn Column) const override;
 
 	UFUNCTION(BlueprintCallable)
+	virtual TArray<AHero*> GetHeroesInRow(ESquadRow Row) const override;
+	
+	UFUNCTION(BlueprintCallable)
 	virtual void GetNeighbours(AHero* OriginHero, AHero* OutForward, AHero* OutBack) const override;
 
 	UFUNCTION(BlueprintCallable)
 	virtual ESquadRow GetRow(AHero* Hero) const override;
-
+	
 	UFUNCTION(BlueprintCallable)
-	virtual TArray<AHero*> GetHeroesInRow(ESquadRow Row) const override;
+	virtual ESquadColumn GetColumn(AHero* Hero) const override;
 
 	UFUNCTION(BlueprintCallable)
 	virtual AHero* GetLeader() const override;
@@ -37,7 +40,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	virtual void AddSquadEffect(FGameplayEffectSpecHandle EffectSpec) override;
-	
+
 	UFUNCTION(BlueprintCallable)
 	virtual TArray<FGameplayEffectSpecHandle> GetSquadEffects() const override { return SquadEffects; }
 

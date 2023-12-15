@@ -58,6 +58,18 @@ ESquadRow USquad::GetRow(AHero* Hero) const
 	return {};
 }
 
+ESquadColumn USquad::GetColumn(AHero* Hero) const
+{
+	for (const auto DropZone : DropZones)
+	{
+		if (DropZone->GetHero() == Hero)
+		{
+			return DropZone->Column;
+		}
+	}
+	return {};
+}
+
 TArray<AHero*> USquad::GetHeroesInRow(ESquadRow Row) const
 {
 	TArray<AHero*> ResultArray;
