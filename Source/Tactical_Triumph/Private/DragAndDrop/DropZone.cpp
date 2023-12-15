@@ -7,18 +7,6 @@ ADropZone::ADropZone()
 	PrimaryActorTick.bCanEverTick = true;
 }
 
-void ADropZone::BeginPlay()
-{
-	Super::BeginPlay();
-	
-}
-
-void ADropZone::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
-
 bool ADropZone::GetIsOccupied() const
 {
  	return IsOccupied;

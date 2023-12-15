@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+struct FGameplayEffectSpecHandle;
 class AHero;
 enum class ESquadRow;
 enum class ESquadColumn;

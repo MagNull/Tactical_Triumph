@@ -21,16 +21,31 @@ void UHeroAbilitySystemComponent::BeginDestroy()
 void UHeroAbilitySystemComponent::OnEffectApplied(UAbilitySystemComponent* ASC, const FGameplayEffectSpec& EffectSpec,
                                                   FActiveGameplayEffectHandle ActiveEffectHandle) const
 {
-	if(EffectSpec.DynamicGrantedTags.Num() == 0)
+	FGameplayTagContainer GrantedTags;
+	EffectSpec.GetAllGrantedTags(GrantedTags);
+	if (GrantedTags.Num() == 0)
 		return;
 	
-	ASC->ClearAllAbilities();
+	
 	for (auto TagAbilityPair : TagToAbilityMap)
 	{
+		UHeroGameplayAbility* Ability = TagAbilityPair.Value.GetDefaultObject();
+
+		//Clear all this ability duplicates
+		TArray<FGameplayAbilitySpecHandle> Abilities;
+		ASC->GetAllAbilities(Abilities);
+		for (auto ASH : Abilities)
+		{
+			const UGameplayAbility* OtherAbility = ASC->FindAbilitySpecFromHandle(ASH)->Ability;
+			if(OtherAbility == Ability)
+			{
+				ASC->ClearAbility(ASH);
+			}
+		}
+		
 		if (ASC->HasAnyMatchingGameplayTags(TagAbilityPair.Key.GetSingleTagContainer()))
 		{
-			UHeroGameplayAbility* Ability = TagAbilityPair.Value.GetDefaultObject();
-			if (Ability->AbilityTags.HasAny(SpellTag.GetSingleTagContainer()))
+			if (Ability->AbilityTags.HasAny(NotActivableAbilityTags))
 			{
 				ASC->GiveAbility(Ability);
 			}
