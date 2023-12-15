@@ -44,6 +44,24 @@ void AHeroAbilityTargeting::ConfirmTargetingAndContinue()
 	}
 }
 
+void AHeroAbilityTargeting::StartTargeting(UGameplayAbility* Ability)
+{
+	Super::StartTargeting(Ability);
+	UGameplayStatics::GetPlayerController(GetWorld(), 0)->bEnableClickEvents = false;
+}
+
+void AHeroAbilityTargeting::ConfirmTargeting()
+{
+	Super::ConfirmTargeting();
+	UGameplayStatics::GetPlayerController(GetWorld(), 0)->bEnableClickEvents = true;
+}
+
+void AHeroAbilityTargeting::CancelTargeting()
+{
+	Super::CancelTargeting();
+	UGameplayStatics::GetPlayerController(GetWorld(), 0)->bEnableClickEvents = true;
+}
+
 FGameplayAbilityTargetDataHandle AHeroAbilityTargeting::MakeTargetData(FHitResult hitResult)
 {
 	TArray<TWeakObjectPtr<AActor>> TargetActors{};

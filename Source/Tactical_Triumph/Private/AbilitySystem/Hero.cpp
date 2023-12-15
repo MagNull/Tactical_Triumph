@@ -1,5 +1,6 @@
 ﻿#include "Tactical_Triumph/Public/AbilitySystem/Hero.h"
 #include "AbilitySystemComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Tactical_Triumph/Public/AbilitySystem/HeroAttributeSet.h"
 
 AHero::AHero()
