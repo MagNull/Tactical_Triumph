@@ -44,6 +44,9 @@ public:
 
 	AHero* GetHero(ESquadRow row, ESquadColumn column) const;
 	
+	UFUNCTION(BlueprintCallable)
+	void AddDropZone(ADropZone* NewDropZone);
+	
 protected:
 	UPROPERTY(EditAnywhere)
 	TArray<ADropZone*> DropZones;

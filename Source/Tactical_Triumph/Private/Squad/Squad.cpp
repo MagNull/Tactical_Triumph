@@ -99,6 +99,16 @@ AHero* USquad::GetHero(ESquadRow row, ESquadColumn column) const
 	return nullptr;
 }
 
+void USquad::AddDropZone(ADropZone* NewDropZone)
+{
+	if(NewDropZone == nullptr)
+	{
+		UE_LOG(LogTemp, Display, TEXT("Failed to add drop zone"));
+		return;
+	}
+	DropZones.Add(NewDropZone);	
+}
+
 // Called when the game starts or when spawned
 void USquad::BeginPlay()
 {

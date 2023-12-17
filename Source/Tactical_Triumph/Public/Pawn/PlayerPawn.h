@@ -25,18 +25,18 @@ public:
 protected:
 	
 	UPROPERTY()
-	class UHandle* handle_;
+	class UHandle* Handle;
 
 	UPROPERTY()
-	class USquad* Squad;
+	class USquad* Squad;;
 
-public:	 
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	UFUNCTION(BlueprintCallable)
-	TArray<UDA_Card*> GetCards() const;
+	// UFUNCTION(BlueprintCallable)
+	// TArray<UDA_Card*> GetCards() const;
 };
