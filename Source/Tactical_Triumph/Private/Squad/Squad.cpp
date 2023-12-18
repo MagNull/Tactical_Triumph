@@ -82,18 +82,23 @@ UObject* USquad::GetPlayerOwner() const
 	return nullptr;
 }
 
-void USquad::AddHero(ADropZone* NewDropZone)
+void USquad::AddHero(AHero* NewHero, ESquadRow row, ESquadColumn column)
 {
-	DropZones.Add(NewDropZone);
+	const auto DropZone = GetDropZone(row, column);
+	if(!DropZone)
+	{
+		DropZone->SetHero(NewHero);
+		UE_LOG(LogTemp, Warning, TEXT("Is not valid drop zone"));
+	}
 }
 
-AHero* USquad::GetHero(ESquadRow row, ESquadColumn column) const
+ADropZone* USquad::GetDropZone(ESquadRow row, ESquadColumn column) const
 {
 	for (const auto DropZone : DropZones)
 	{
 		if (DropZone->Row == row && DropZone->Column == column)
 		{
-			return DropZone->GetHero();
+			return DropZone;
 		}
 	}
 	return nullptr;

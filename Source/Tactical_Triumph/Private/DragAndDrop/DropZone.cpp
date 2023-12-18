@@ -21,7 +21,7 @@ void ADropZone::Tick(float DeltaTime)
 
 bool ADropZone::GetIsOccupied() const
 {
- 	return IsOccupied;
+ 	return Hero != nullptr;
 }
 
 AHero* ADropZone::GetHero() const
@@ -35,5 +35,4 @@ void ADropZone::SetHero(AHero* NewHero)
 		return;
 	
 	Hero = NewHero;
-	IsOccupied = true;
 }

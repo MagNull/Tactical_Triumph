@@ -40,9 +40,9 @@ public:
 	virtual UObject* GetPlayerOwner() const override;
 
 	UFUNCTION(BlueprintCallable)
-	void AddHero(ADropZone* NewDropZone);
+	void AddHero(AHero* NewHero, ESquadRow row, ESquadColumn column);
 
-	AHero* GetHero(ESquadRow row, ESquadColumn column) const;
+	ADropZone* GetDropZone(ESquadRow row, ESquadColumn column) const;
 	
 	UFUNCTION(BlueprintCallable)
 	void AddDropZone(ADropZone* NewDropZone);
