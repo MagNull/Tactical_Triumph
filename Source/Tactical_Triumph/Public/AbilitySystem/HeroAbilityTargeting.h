@@ -31,7 +31,7 @@ public:
 	virtual void CancelTargeting() override;
 
 protected:
-	FGameplayAbilityTargetDataHandle MakeTargetData(FHitResult hitResult);
+	FGameplayAbilityTargetDataHandle MakeTargetData(const FHitResult& hitResult) const;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (ExposeOnSpawn = true), Category = "Selection")
 	ESelectionType SelectionType;

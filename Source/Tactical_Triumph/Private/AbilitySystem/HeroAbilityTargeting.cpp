@@ -58,7 +58,7 @@ void AHeroAbilityTargeting::CancelTargeting()
 	UGameplayStatics::GetPlayerController(GetWorld(), 0)->bEnableClickEvents = true;
 }
 
-FGameplayAbilityTargetDataHandle AHeroAbilityTargeting::MakeTargetData(FHitResult hitResult)
+FGameplayAbilityTargetDataHandle AHeroAbilityTargeting::MakeTargetData(const FHitResult& hitResult) const
 {
 	TArray<TWeakObjectPtr<AActor>> TargetActors{};
 	AHero* TargetHero = Cast<AHero>(hitResult.GetActor());
@@ -96,7 +96,7 @@ FGameplayAbilityTargetDataHandle AHeroAbilityTargeting::MakeTargetData(FHitResul
 		}
 	}
 
-	for (auto TargetActor : TargetActors)
+	for (const auto TargetActor : TargetActors)
 	{
 		UE_LOG(LogTemp, Display, TEXT("%s "), *TargetActor->GetName());
 	}
