@@ -38,11 +38,11 @@ float AHero::GetMaxHealth() const
 	return Attributes->GetMaxHealth();
 }
 
-void AHero::HandleDamage(float DamageAmount, const FGameplayTagContainer DamageTags,
-                         UAbilitySystemComponent* DamageInstigator, UAbilitySystemComponent* Target)
+void AHero::HandleDamageChanged(float DamageAmount, const FGameplayTagContainer DamageTags,
+                                UAbilitySystemComponent* DamageInstigator, UAbilitySystemComponent* Target)
 {
-	OnDamaged(DamageAmount, DamageTags,
-	          DamageInstigator, Target);
+	OnDamageChanged(DamageAmount, DamageTags,
+	                DamageInstigator, Target);
 }
 
 void AHero::HandleHealthChanged(float deltaValue, const FGameplayTagContainer& eventTags)

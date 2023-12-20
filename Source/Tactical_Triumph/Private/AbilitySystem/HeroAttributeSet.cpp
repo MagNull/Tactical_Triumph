@@ -46,26 +46,30 @@ void UHeroAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 {
 	Super::PostGameplayEffectExecute(Data);
 
-	FGameplayTagContainer tagContainer;
-	float deltaValue;
-	UAbilitySystemComponent* instigator = nullptr;
-	AHero* target;
-	BreakEffectData(Data, tagContainer, deltaValue, instigator, target);
+	UE_LOG(LogTemp, Display, TEXT("Trigger"));
+	FGameplayTagContainer TagContainer;
+	float DeltaValue;
+	UAbilitySystemComponent* Instigator = nullptr;
+	AHero* Target;
+	BreakEffectData(Data, TagContainer, DeltaValue, Instigator, Target);
 
 	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
 	{
-		SetHealth(FMath::Clamp(GetHealth(), 0, GetMaxHealth()));
-		if (target)
+		const float NewHealth = FMath::Clamp(GetHealth(), 0, GetMaxHealth());
+		DeltaValue = GetHealth() - NewHealth;
+		SetHealth(NewHealth);
+		if (Target)
 		{
-			target->HandleHealthChanged(deltaValue, tagContainer);
+			Target->HandleHealthChanged(DeltaValue, TagContainer);
 		}
 	}
 
 	if (Data.EvaluatedData.Attribute == GetPresentDamageAttribute())
 	{
-		if (target)
+		UE_LOG(LogTemp, Display, TEXT("Damaged"));
+		if (Target)
 		{
-			target->HandleDamage(deltaValue, tagContainer, instigator, target->GetAbilitySystemComponent());
+			Target->HandleDamageChanged(DeltaValue, TagContainer, Instigator, Target->GetAbilitySystemComponent());
 		}
 	}
 }

@@ -14,13 +14,12 @@ class UGameplayEffect;
 UCLASS()
 class TACTICAL_TRIUMPH_API AHero : public AActor, public IAbilitySystemInterface
 {
+	friend UHeroAttributeSet;
 	GENERATED_BODY()
 
 public:
 	AHero();
-	friend UHeroAttributeSet;
 
-public:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override
 	{
 		return Cast<UAbilitySystemComponent>(AbilitySystemComponent);
@@ -42,7 +41,7 @@ public:
 	float GetPresentDamage() const;
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void OnDamaged(float DamageAmount, const FGameplayTagContainer DamageTags,
+	void OnDamageChanged(float DamageAmount, const FGameplayTagContainer DamageTags,
 				   UAbilitySystemComponent* DamageInstigator, UAbilitySystemComponent* Target);
 
 
@@ -53,7 +52,7 @@ public:
 	USkeletalMeshComponent* Mesh;
 
 protected:
-	void HandleDamage(float DamageAmount, const FGameplayTagContainer DamageTags,
+	void HandleDamageChanged(float DamageAmount, const FGameplayTagContainer DamageTags,
 	                  UAbilitySystemComponent* DamageInstigator, UAbilitySystemComponent* Target);
 
 	void HandleHealthChanged(float deltaValue, const FGameplayTagContainer& eventTags);
