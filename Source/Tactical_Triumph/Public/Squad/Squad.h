@@ -39,9 +39,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual UObject* GetPlayerOwner() const override;
 
-	UFUNCTION(BlueprintCallable)
-	void AddHero(AHero* NewHero, ESquadRow row, ESquadColumn column);
-
 	ADropZone* GetDropZone(ESquadRow row, ESquadColumn column) const;
 	
 	UFUNCTION(BlueprintCallable)

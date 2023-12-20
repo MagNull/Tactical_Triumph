@@ -41,10 +41,12 @@ void USquad::GetNeighbours(AHero* originHero, AHero* outForward, AHero* outBack)
 	}
 
 	if (FindDropZone->Row != ESquadRow::Vanguard)
-		outForward = GetHero(static_cast<ESquadRow>(static_cast<int>(FindDropZone->Row) + 1), FindDropZone->Column);
+		outForward = GetDropZone(static_cast<ESquadRow>(static_cast<int>(FindDropZone->Row) + 1),
+		                         FindDropZone->Column)->GetHero();
 
 	if (FindDropZone->Row == ESquadRow::Back)
-		outBack = GetHero(static_cast<ESquadRow>(static_cast<int>(FindDropZone->Row) - 1), FindDropZone->Column);
+		outBack = GetDropZone(static_cast<ESquadRow>(static_cast<int>(FindDropZone->Row) - 1),
+		                      FindDropZone->Column)->GetHero();
 }
 
 ESquadRow USquad::GetRow(AHero* hero) const
@@ -74,22 +76,12 @@ TArray<AHero*> USquad::GetHeroesInRow(ESquadRow row) const
 
 AHero* USquad::GetLeader() const
 {
-	return GetHero(ESquadRow::Vanguard, ESquadColumn::Mid);
+	return GetDropZone(ESquadRow::Vanguard, ESquadColumn::Mid)->GetHero();
 }
 
 UObject* USquad::GetPlayerOwner() const
 {
 	return nullptr;
-}
-
-void USquad::AddHero(AHero* NewHero, ESquadRow row, ESquadColumn column)
-{
-	const auto DropZone = GetDropZone(row, column);
-	if(!DropZone)
-	{
-		DropZone->SetHero(NewHero);
-		UE_LOG(LogTemp, Warning, TEXT("Is not valid drop zone"));
-	}
 }
 
 ADropZone* USquad::GetDropZone(ESquadRow row, ESquadColumn column) const
@@ -106,12 +98,12 @@ ADropZone* USquad::GetDropZone(ESquadRow row, ESquadColumn column) const
 
 void USquad::AddDropZone(ADropZone* NewDropZone)
 {
-	if(NewDropZone == nullptr)
+	if (NewDropZone == nullptr)
 	{
 		UE_LOG(LogTemp, Display, TEXT("Failed to add drop zone"));
 		return;
 	}
-	DropZones.Add(NewDropZone);	
+	DropZones.Add(NewDropZone);
 }
 
 // Called when the game starts or when spawned
