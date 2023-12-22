@@ -43,19 +43,23 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnDamageChanged(float DamageAmount, const FGameplayTagContainer DamageTags,
 				   UAbilitySystemComponent* DamageInstigator, UAbilitySystemComponent* Target);
-
-
+	
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnHealthChanged(float deltaValue, const FGameplayTagContainer& eventTags);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnAttackChanged(float deltaValue, const FGameplayTagContainer& eventTags);
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	USkeletalMeshComponent* Mesh;
 
 protected:
 	void HandleDamageChanged(float DamageAmount, const FGameplayTagContainer DamageTags,
-	                  UAbilitySystemComponent* DamageInstigator, UAbilitySystemComponent* Target);
+					  UAbilitySystemComponent* DamageInstigator, UAbilitySystemComponent* Target);
 
 	void HandleHealthChanged(float deltaValue, const FGameplayTagContainer& eventTags);
+	
+	void HandleAttackChanged(float deltaValue, const FGameplayTagContainer& eventTags);
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UHeroAbilitySystemComponent* AbilitySystemComponent;

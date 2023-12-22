@@ -46,7 +46,6 @@ void UHeroAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 {
 	Super::PostGameplayEffectExecute(Data);
 
-	UE_LOG(LogTemp, Display, TEXT("Trigger"));
 	FGameplayTagContainer TagContainer;
 	float DeltaValue;
 	UAbilitySystemComponent* Instigator = nullptr;
@@ -66,10 +65,17 @@ void UHeroAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 
 	if (Data.EvaluatedData.Attribute == GetPresentDamageAttribute())
 	{
-		UE_LOG(LogTemp, Display, TEXT("Damaged"));
 		if (Target)
 		{
 			Target->HandleDamageChanged(DeltaValue, TagContainer, Instigator, Target->GetAbilitySystemComponent());
+		}
+	}
+
+	if (Data.EvaluatedData.Attribute == GetAttackAttribute())
+	{
+		if (Target)
+		{
+			Target->HandleAttackChanged(DeltaValue, TagContainer);
 		}
 	}
 }
