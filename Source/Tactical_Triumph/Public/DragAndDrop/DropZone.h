@@ -33,6 +33,9 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	ESquadRow Row;
+
+	UPROPERTY(EditAnywhere)
+	class APlayerPawn* PlayerOwnerPawn;
 	
 	UFUNCTION(BlueprintCallable)
 	bool GetIsOccupied() const;
@@ -42,4 +45,7 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	void SetHero(AHero* NewHero);
+
+	UFUNCTION(BlueprintCallable)
+	bool IsCenter();
 };

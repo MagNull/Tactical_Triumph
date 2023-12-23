@@ -34,12 +34,15 @@ public:
 	virtual TArray<AHero*> GetHeroesInRow(ESquadRow row) const override;
 	
 	UFUNCTION(BlueprintCallable)
-	virtual AHero* GetLeader() const override;
+	virtual AHero* GetLeader() override;
 	
 	UFUNCTION(BlueprintCallable)
 	virtual UObject* GetPlayerOwner() const override;
 
 	ADropZone* GetDropZone(ESquadRow row, ESquadColumn column) const;
+
+	UFUNCTION(BlueprintCallable)
+	ADropZone* GetCenterDropZone();
 	
 	UFUNCTION(BlueprintCallable)
 	void AddDropZone(ADropZone* NewDropZone);
@@ -47,6 +50,9 @@ public:
 protected:
 	UPROPERTY(EditAnywhere)
 	TArray<ADropZone*> DropZones;
+
+	UPROPERTY(EditAnywhere)
+	AHero* Leader;
 	
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

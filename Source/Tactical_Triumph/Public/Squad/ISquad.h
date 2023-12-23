@@ -12,6 +12,6 @@ public:
 	virtual TArray<AHero*> GetHeroesInColumn(ESquadColumn column) const  = 0;
 	virtual ESquadRow GetRow(AHero* hero) const = 0;
 	virtual TArray<AHero*> GetHeroesInRow(ESquadRow row) const = 0;
-	virtual AHero* GetLeader() const = 0;
+	virtual AHero* GetLeader() = 0;
 	virtual UObject* GetPlayerOwner() const = 0;
 };

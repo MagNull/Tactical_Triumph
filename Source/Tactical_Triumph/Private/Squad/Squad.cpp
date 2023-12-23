@@ -44,7 +44,7 @@ void USquad::GetNeighbours(AHero* originHero, AHero* outForward, AHero* outBack)
 		outForward = GetDropZone(static_cast<ESquadRow>(static_cast<int>(FindDropZone->Row) + 1),
 		                         FindDropZone->Column)->GetHero();
 
-	if (FindDropZone->Row == ESquadRow::Back)
+	if (FindDropZone->Row != ESquadRow::Back)
 		outBack = GetDropZone(static_cast<ESquadRow>(static_cast<int>(FindDropZone->Row) - 1),
 		                      FindDropZone->Column)->GetHero();
 }
@@ -74,9 +74,13 @@ TArray<AHero*> USquad::GetHeroesInRow(ESquadRow row) const
 	return ResultArray;
 }
 
-AHero* USquad::GetLeader() const
+AHero* USquad::GetLeader()
 {
-	return GetDropZone(ESquadRow::Vanguard, ESquadColumn::Mid)->GetHero();
+	if(Leader == nullptr)
+	{
+		Leader = GetCenterDropZone()->GetHero();
+	}
+	return Leader;
 }
 
 UObject* USquad::GetPlayerOwner() const
@@ -94,6 +98,11 @@ ADropZone* USquad::GetDropZone(ESquadRow row, ESquadColumn column) const
 		}
 	}
 	return nullptr;
+}
+
+ADropZone* USquad::GetCenterDropZone()
+{
+	return GetDropZone(ESquadRow::Flank, ESquadColumn::Mid);
 }
 
 void USquad::AddDropZone(ADropZone* NewDropZone)

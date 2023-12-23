@@ -36,3 +36,8 @@ void ADropZone::SetHero(AHero* NewHero)
 	
 	Hero = NewHero;
 }
+
+bool ADropZone::IsCenter()
+{
+	return Column == ESquadColumn::Mid && Row == ESquadRow::Flank;
+}
