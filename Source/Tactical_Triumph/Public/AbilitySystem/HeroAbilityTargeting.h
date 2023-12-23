@@ -8,16 +8,31 @@
 
 class AHero;
 
+UENUM(BlueprintType)
+enum class ESelectionType : uint8
+{
+	Hero,
+	Column,
+	Row
+};
+
 UCLASS()
 class TACTICAL_TRIUMPH_API AHeroAbilityTargeting : public AGameplayAbilityTargetActor_Trace
 {
 	GENERATED_BODY()
+
 public:
 	virtual FHitResult PerformTrace(AActor* InSourceActor) override;
 	virtual bool ShouldProduceTargetData() const override;
 	virtual void ConfirmTargetingAndContinue() override;
-protected:
-	FGameplayAbilityTargetDataHandle MakeTargetData(FHitResult hitResult);
 
-	AHero* LastTargetHero;
+	virtual void StartTargeting(UGameplayAbility* Ability) override;
+	virtual void ConfirmTargeting() override;
+	virtual void CancelTargeting() override;
+
+protected:
+	FGameplayAbilityTargetDataHandle MakeTargetData(const FHitResult& hitResult) const;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (ExposeOnSpawn = true), Category = "Selection")
+	ESelectionType SelectionType;
 };

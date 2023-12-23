@@ -1,5 +1,6 @@
 ﻿#include "Tactical_Triumph/Public/AbilitySystem/Hero.h"
 #include "AbilitySystemComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Tactical_Triumph/Public/AbilitySystem/HeroAttributeSet.h"
 
 AHero::AHero()
@@ -37,14 +38,19 @@ float AHero::GetMaxHealth() const
 	return Attributes->GetMaxHealth();
 }
 
-void AHero::HandleDamage(float DamageAmount, const FGameplayTagContainer DamageTags,
-						 UAbilitySystemComponent* DamageInstigator, UAbilitySystemComponent* Target)
+void AHero::HandleDamageChanged(float DamageAmount, const FGameplayTagContainer DamageTags,
+								UAbilitySystemComponent* DamageInstigator, UAbilitySystemComponent* Target)
 {
-	OnDamaged(DamageAmount, DamageTags,
-			  DamageInstigator, Target);
+	OnDamageChanged(DamageAmount, DamageTags,
+					DamageInstigator, Target);
 }
 
 void AHero::HandleHealthChanged(float deltaValue, const FGameplayTagContainer& eventTags)
 {
 	OnHealthChanged(deltaValue, eventTags);
+}
+
+void AHero::HandleAttackChanged(float deltaValue, const FGameplayTagContainer& eventTags)
+{
+	OnAttackChanged(deltaValue, eventTags);
 }

@@ -4,12 +4,8 @@ UHeroGameplayAbility::UHeroGameplayAbility()
 {
 }
 
-void UHeroGameplayAbility::AddTrigger(FAbilityTriggerData TriggerData)
+void UHeroGameplayAbility::OnRemoveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
 {
-	AbilityTriggers.Emplace(TriggerData);
-}
-
-void UHeroGameplayAbility::AddRequiredTag(const FGameplayTag& tag)
-{
-	ActivationRequiredTags.AddTag(tag);
+	Super::OnRemoveAbility(ActorInfo, Spec);
+	OnAbilityRemoved();
 }

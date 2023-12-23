@@ -22,12 +22,8 @@ class TACTICAL_TRIUMPH_API UHeroGameplayAbility : public UGameplayAbility
 public:
 	UHeroGameplayAbility();
 
-	void AddTrigger(FAbilityTriggerData TriggerData);
-	void AddRequiredTag(const FGameplayTag& tag);
-	
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Abilities")
-	EAbilityInputID AbilityInputID;
-
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Abilities")
-	bool bIsSpell;
+	virtual void OnRemoveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec) override;
+protected:
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnAbilityRemoved();
 };

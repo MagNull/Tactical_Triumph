@@ -24,7 +24,7 @@ private:
 	                     FActiveGameplayEffectHandle ActiveEffectHandle) const;
 
 	UPROPERTY(EditAnywhere)
-	FGameplayTag SpellTag;
+	FGameplayTagContainer NotActivableAbilityTags;
 
 	TMap<FGameplayTag, TSubclassOf<UHeroGameplayAbility>> TagToAbilityMap;
 	FDelegateHandle EffectAppliedHandle;

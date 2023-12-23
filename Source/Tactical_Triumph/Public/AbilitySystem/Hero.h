@@ -14,13 +14,12 @@ class UGameplayEffect;
 UCLASS()
 class TACTICAL_TRIUMPH_API AHero : public AActor, public IAbilitySystemInterface
 {
+	friend UHeroAttributeSet;
 	GENERATED_BODY()
 
 public:
 	AHero();
-	friend UHeroAttributeSet;
 
-public:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override
 	{
 		return Cast<UAbilitySystemComponent>(AbilitySystemComponent);
@@ -42,24 +41,28 @@ public:
 	float GetPresentDamage() const;
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void OnDamaged(float DamageAmount, const FGameplayTagContainer DamageTags,
+	void OnDamageChanged(float DamageAmount, const FGameplayTagContainer DamageTags,
 				   UAbilitySystemComponent* DamageInstigator, UAbilitySystemComponent* Target);
-
-
+	
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnHealthChanged(float deltaValue, const FGameplayTagContainer& eventTags);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnAttackChanged(float deltaValue, const FGameplayTagContainer& eventTags);
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	USkeletalMeshComponent* Mesh;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	UHeroAbilitySystemComponent* AbilitySystemComponent;
-
 protected:
-	void HandleDamage(float DamageAmount, const FGameplayTagContainer DamageTags,
-	                  UAbilitySystemComponent* DamageInstigator, UAbilitySystemComponent* Target);
+	void HandleDamageChanged(float DamageAmount, const FGameplayTagContainer DamageTags,
+					  UAbilitySystemComponent* DamageInstigator, UAbilitySystemComponent* Target);
 
 	void HandleHealthChanged(float deltaValue, const FGameplayTagContainer& eventTags);
+	
+	void HandleAttackChanged(float deltaValue, const FGameplayTagContainer& eventTags);
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UHeroAbilitySystemComponent* AbilitySystemComponent;
 
 private:
 	UPROPERTY(EditAnywhere, Category = "Attributes")

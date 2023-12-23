@@ -1,41 +1,36 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-#pragma once
-
 #include "CoreMinimal.h"
+#include "DragAndDrop/DropZone.h"
 #include "ISquad.h"
+#include "AbilitySystem/Hero.h"
+#include "AbilitySystem/SquadLines.h"
 #include "Components/ActorComponent.h"
 #include "Squad.generated.h"
 
-class AHero;
-class ADropZone;
-enum class ESquadColumn;
-enum class ESquadRow;
-
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class TACTICAL_TRIUMPH_API USquad : public UActorComponent, public ISquad
 {
 	GENERATED_BODY()
-	
-public:	
-	// Sets default values for this actor's properties
+
+public:
 	USquad();
 
 	UFUNCTION(BlueprintCallable)
-	virtual TArray<AHero*> GetHeroesInColumn(ESquadColumn column) const override;
+	virtual TArray<AHero*> GetHeroesInColumn(ESquadColumn Column) const override;
 
 	UFUNCTION(BlueprintCallable)
-	virtual void GetNeighbours(AHero* originHero, AHero* outForward, AHero* outBack) const override;
+	virtual TArray<AHero*> GetHeroesInRow(ESquadRow Row) const override;
 
 	UFUNCTION(BlueprintCallable)
-	virtual ESquadRow GetRow(AHero* hero) const override;
+	virtual void GetNeighbours(AHero* OriginHero, UPARAM(ref)AHero* OutForward, UPARAM(ref)AHero* OutBack) const override;
 
 	UFUNCTION(BlueprintCallable)
-	virtual TArray<AHero*> GetHeroesInRow(ESquadRow row) const override;
-	
+	virtual ESquadRow GetRow(AHero* Hero) const override;
+
 	UFUNCTION(BlueprintCallable)
 	virtual AHero* GetLeader() override;
 	
+	AHero* GetHero(ESquadRow Row, ESquadColumn Column) const;
+
 	UFUNCTION(BlueprintCallable)
 	virtual UObject* GetPlayerOwner() const override;
 
@@ -43,13 +38,27 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	ADropZone* GetCenterDropZone();
+	UFUNCTION(BlueprintCallable)
+	virtual void AddSquadEffect(TSubclassOf<UGameplayEffect> Effect) override;
+
+	UFUNCTION(BlueprintCallable)
+	virtual TArray<TSubclassOf<UGameplayEffect>> GetSquadEffects() const override { return SquadEffects; }
+
+	UFUNCTION(BlueprintCallable)
+	virtual void AddSquadAbility(TSubclassOf<UHeroGameplayAbility> Ability, bool activate) override;
 	
 	UFUNCTION(BlueprintCallable)
 	void AddDropZone(ADropZone* NewDropZone);
 	
 protected:
+	UFUNCTION(BlueprintCallable)
+	virtual TArray<TSubclassOf<UHeroGameplayAbility>> GetSquadAbilities() const override { return SquadAbilities; }
+
+private:
 	UPROPERTY(EditAnywhere)
 	TArray<ADropZone*> DropZones;
+	TArray<TSubclassOf<UGameplayEffect>> SquadEffects;
+	TArray<TSubclassOf<UHeroGameplayAbility>> SquadAbilities;
 
 	UPROPERTY(EditAnywhere)
 	AHero* Leader;

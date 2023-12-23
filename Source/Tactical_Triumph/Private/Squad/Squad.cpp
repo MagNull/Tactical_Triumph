@@ -1,7 +1,6 @@
 #include "Squad/Squad.h"
+
 #include "DragAndDrop/DropZone.h"
-#include "AbilitySystem/SquadLines.h"
-#include "AbilitySystem/Hero.h"
 
 USquad::USquad()
 {
@@ -21,24 +20,27 @@ TArray<AHero*> USquad::GetHeroesInColumn(ESquadColumn column) const
 	return ResultArray;
 }
 
-void USquad::GetNeighbours(AHero* originHero, AHero* outForward, AHero* outBack) const
+void USquad::GetNeighbours(AHero* OriginHero, AHero* OutForward, AHero* OutBack) const
 {
+	UE_LOG(LogTemp, Display, TEXT("Start"));
 	const ADropZone* FindDropZone = nullptr;
 
 	for (const auto DropZone : DropZones)
 	{
-		if (DropZone->GetHero() == originHero)
+		if (DropZone->GetHero() == OriginHero)
 		{
 			FindDropZone = DropZone;
 		}
 	}
 
+	UE_LOG(LogTemp, Display, TEXT("Branch"));
 	if (FindDropZone == nullptr)
 	{
-		outForward = nullptr;
-		outBack = nullptr;
+		OutForward = nullptr;
+		OutBack = nullptr;
 		return;
 	}
+	UE_LOG(LogTemp, Display, TEXT("Post sBranch"));
 
 	if (FindDropZone->Row != ESquadRow::Vanguard)
 		outForward = GetDropZone(static_cast<ESquadRow>(static_cast<int>(FindDropZone->Row) + 1),
@@ -49,11 +51,11 @@ void USquad::GetNeighbours(AHero* originHero, AHero* outForward, AHero* outBack)
 		                      FindDropZone->Column)->GetHero();
 }
 
-ESquadRow USquad::GetRow(AHero* hero) const
+ESquadRow USquad::GetRow(AHero* Hero) const
 {
 	for (const auto DropZone : DropZones)
 	{
-		if (DropZone->GetHero() == hero)
+		if (DropZone->GetHero() == Hero)
 		{
 			return DropZone->Row;
 		}
@@ -61,12 +63,24 @@ ESquadRow USquad::GetRow(AHero* hero) const
 	return {};
 }
 
-TArray<AHero*> USquad::GetHeroesInRow(ESquadRow row) const
+ESquadColumn USquad::GetColumn(AHero* Hero) const
+{
+	for (const auto DropZone : DropZones)
+	{
+		if (DropZone->GetHero() == Hero)
+		{
+			return DropZone->Column;
+		}
+	}
+	return {};
+}
+
+TArray<AHero*> USquad::GetHeroesInRow(ESquadRow Row) const
 {
 	TArray<AHero*> ResultArray;
 	for (const auto DropZone : DropZones)
 	{
-		if (DropZone->Row == row)
+		if (DropZone->Row == Row)
 		{
 			ResultArray.Add(DropZone->GetHero());
 		}
@@ -97,7 +111,6 @@ ADropZone* USquad::GetDropZone(ESquadRow row, ESquadColumn column) const
 			return DropZone;
 		}
 	}
-	return nullptr;
 }
 
 ADropZone* USquad::GetCenterDropZone()
@@ -118,10 +131,30 @@ void USquad::AddDropZone(ADropZone* NewDropZone)
 // Called when the game starts or when spawned
 void USquad::BeginPlay()
 {
-	Super::BeginPlay();
+	SquadAbilities.Add(Ability);
+	for (const auto DropZone : DropZones)
+	{
+		UAbilitySystemComponent* TargetASC = DropZone->GetHero()->GetAbilitySystemComponent();
+		if (activate)
+		{
+			const FGameplayAbilitySpecHandle AbilitySpec = TargetASC->GiveAbility(Ability.GetDefaultObject());
+			TargetASC->TryActivateAbility(AbilitySpec);
+		}
+		else
+		{
+			TargetASC->GiveAbility(Ability.GetDefaultObject());
+		}
+	}
 }
 
-void USquad::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+AHero* USquad::GetHero(ESquadRow Row, ESquadColumn Column) const
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	for (const auto DropZone : DropZones)
+	{
+		if (DropZone->Row == Row && DropZone->Column == Column)
+		{
+			return DropZone->GetHero();
+		}
+	}
+	return nullptr;
 }
