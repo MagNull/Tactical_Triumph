@@ -23,6 +23,8 @@ void ADropZone::SetHero(AHero* NewHero)
 		return;
 	
 	Hero = NewHero;
+
+	OnSetHero.Broadcast(NewHero);
 }
 
 bool ADropZone::IsCenter()

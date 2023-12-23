@@ -27,6 +27,9 @@ public:
 	virtual ESquadRow GetRow(AHero* Hero) const override;
 
 	UFUNCTION(BlueprintCallable)
+	virtual ESquadColumn GetColumn(AHero* Hero) const override;
+
+	UFUNCTION(BlueprintCallable)
 	virtual AHero* GetLeader() override;
 	
 	AHero* GetHero(ESquadRow Row, ESquadColumn Column) const;
@@ -46,6 +49,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	virtual void AddSquadAbility(TSubclassOf<UHeroGameplayAbility> Ability, bool activate) override;
+
+	void OnSetHero(AHero* NewHero);
 	
 	UFUNCTION(BlueprintCallable)
 	void AddDropZone(ADropZone* NewDropZone);
@@ -62,12 +67,6 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	AHero* Leader;
-	
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
+	FDelegateHandle OnSetHeroHandle;
 };

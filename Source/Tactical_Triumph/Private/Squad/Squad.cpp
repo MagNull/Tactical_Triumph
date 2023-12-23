@@ -43,11 +43,11 @@ void USquad::GetNeighbours(AHero* OriginHero, AHero* OutForward, AHero* OutBack)
 	UE_LOG(LogTemp, Display, TEXT("Post sBranch"));
 
 	if (FindDropZone->Row != ESquadRow::Vanguard)
-		outForward = GetDropZone(static_cast<ESquadRow>(static_cast<int>(FindDropZone->Row) + 1),
+		OutForward = GetDropZone(static_cast<ESquadRow>(static_cast<int>(FindDropZone->Row) + 1),
 		                         FindDropZone->Column)->GetHero();
 
 	if (FindDropZone->Row != ESquadRow::Back)
-		outBack = GetDropZone(static_cast<ESquadRow>(static_cast<int>(FindDropZone->Row) - 1),
+		OutBack = GetDropZone(static_cast<ESquadRow>(static_cast<int>(FindDropZone->Row) - 1),
 		                      FindDropZone->Column)->GetHero();
 }
 
@@ -111,6 +111,7 @@ ADropZone* USquad::GetDropZone(ESquadRow row, ESquadColumn column) const
 			return DropZone;
 		}
 	}
+	return {};
 }
 
 ADropZone* USquad::GetCenterDropZone()
@@ -118,18 +119,17 @@ ADropZone* USquad::GetCenterDropZone()
 	return GetDropZone(ESquadRow::Flank, ESquadColumn::Mid);
 }
 
-void USquad::AddDropZone(ADropZone* NewDropZone)
+void USquad::AddSquadEffect(TSubclassOf<UGameplayEffect> Effect)
 {
-	if (NewDropZone == nullptr)
+	SquadEffects.Add(Effect);
+	for (const auto DropZone : DropZones)
 	{
-		UE_LOG(LogTemp, Display, TEXT("Failed to add drop zone"));
-		return;
+		UAbilitySystemComponent* TargetASC = DropZone->GetHero()->GetAbilitySystemComponent();
+		TargetASC->ApplyGameplayEffectToSelf(Effect.GetDefaultObject(), 0, TargetASC->MakeEffectContext());
 	}
-	DropZones.Add(NewDropZone);
 }
 
-// Called when the game starts or when spawned
-void USquad::BeginPlay()
+void USquad::AddSquadAbility(TSubclassOf<UHeroGameplayAbility> Ability, bool activate)
 {
 	SquadAbilities.Add(Ability);
 	for (const auto DropZone : DropZones)
@@ -145,6 +145,31 @@ void USquad::BeginPlay()
 			TargetASC->GiveAbility(Ability.GetDefaultObject());
 		}
 	}
+}
+
+void USquad::OnSetHero(AHero* NewHero)
+{
+	UAbilitySystemComponent* TargetASC = NewHero->GetAbilitySystemComponent();
+	for (auto Effect : SquadEffects)
+	{
+		TargetASC->ApplyGameplayEffectToSelf(Effect.GetDefaultObject(), 0, TargetASC->MakeEffectContext());
+	}
+	for (auto Ability : SquadAbilities)
+	{
+		TargetASC->GiveAbility(Ability.GetDefaultObject());
+	}
+}
+
+void USquad::AddDropZone(ADropZone* NewDropZone)
+{
+	if (NewDropZone == nullptr)
+	{
+		UE_LOG(LogTemp, Display, TEXT("Failed to add drop zone"));
+		return;
+	}
+	
+	DropZones.Add(NewDropZone);
+	OnSetHeroHandle = NewDropZone->OnSetHero.AddUObject(this, &USquad::OnSetHero);
 }
 
 AHero* USquad::GetHero(ESquadRow Row, ESquadColumn Column) const
