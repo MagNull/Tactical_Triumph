@@ -87,6 +87,21 @@ TArray<AHero*> USquad::GetHeroesInRow(ESquadRow Row) const
 	return ResultArray;
 }
 
+TArray<AHero*> USquad::GetHeroes() const
+{
+	TArray<AHero*> result;
+	for (const auto DropZone : DropZones)
+	{
+		AHero* hero = DropZone->GetHero();
+		if (hero != nullptr)
+		{
+			result.Add(hero);
+		}
+	}
+
+	return result;
+}
+
 AHero* USquad::GetLeader() const
 {
 	return GetHero(ESquadRow::Flank, ESquadColumn::Mid);

@@ -96,11 +96,6 @@ FGameplayAbilityTargetDataHandle AHeroAbilityTargeting::MakeTargetData(const FHi
 		}
 	}
 
-	for (const auto TargetActor : TargetActors)
-	{
-		UE_LOG(LogTemp, Display, TEXT("%s "), *TargetActor->GetName());
-	}
-
 	return StartLocation.MakeTargetDataHandleFromActors(TargetActors,
 	                                                    SelectionType == ESelectionType::Hero);
 }

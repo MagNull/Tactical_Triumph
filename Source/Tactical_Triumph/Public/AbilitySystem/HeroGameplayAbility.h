@@ -19,10 +19,12 @@ UCLASS()
 class TACTICAL_TRIUMPH_API UHeroGameplayAbility : public UGameplayAbility
 {
 	GENERATED_BODY()
+
 public:
 	UHeroGameplayAbility();
 
 	virtual void OnRemoveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec) override;
+
 protected:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnAbilityRemoved();

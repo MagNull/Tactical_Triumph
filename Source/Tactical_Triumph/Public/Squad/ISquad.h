@@ -16,14 +16,16 @@ public:
 	
 	virtual TArray<AHero*> GetHeroesInColumn(ESquadColumn Column) const = 0;
 	virtual TArray<AHero*> GetHeroesInRow(ESquadRow Row) const = 0;
-	
+	virtual TArray<AHero*> GetHeroes() const = 0;
+
 	virtual ESquadRow GetRow(AHero* Hero) const = 0;
 	virtual ESquadColumn GetColumn(AHero* Hero) const = 0;
-	
+
 	virtual AHero* GetLeader() const = 0;
-	
+
 	virtual UObject* GetPlayerOwner() const = 0;
-	
+
+
 	virtual void AddSquadEffect(TSubclassOf<UGameplayEffect> EffectSpec) = 0;
 	virtual TArray<TSubclassOf<UGameplayEffect>> GetSquadEffects() const = 0;
 	
