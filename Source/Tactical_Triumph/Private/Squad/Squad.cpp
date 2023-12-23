@@ -40,14 +40,14 @@ void USquad::GetNeighbours(AHero* OriginHero, AHero* OutForward, AHero* OutBack)
 		OutBack = nullptr;
 		return;
 	}
-	UE_LOG(LogTemp, Display, TEXT("Post sBranch"));
+	UE_LOG(LogTemp, Display, TEXT("Post Branch"));
 
 	if (FindDropZone->Row != ESquadRow::Vanguard)
 		OutForward = GetHero(static_cast<ESquadRow>(static_cast<int>(FindDropZone->Row) + 1), FindDropZone->Column);
 
 	if (FindDropZone->Row != ESquadRow::Back)
 		OutBack = GetHero(static_cast<ESquadRow>(static_cast<int>(FindDropZone->Row) - 1), FindDropZone->Column);
-	UE_LOG(LogTemp, Display, TEXT("%hdd"), OutForward == nullptr);
+	UE_LOG(LogTemp, Display, TEXT("Hero is %hd"), OutForward == nullptr);
 }
 
 ESquadRow USquad::GetRow(AHero* Hero) const

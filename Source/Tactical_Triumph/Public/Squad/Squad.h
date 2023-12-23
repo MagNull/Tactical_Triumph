@@ -21,7 +21,7 @@ public:
 	virtual TArray<AHero*> GetHeroesInRow(ESquadRow Row) const override;
 
 	UFUNCTION(BlueprintCallable)
-	virtual void GetNeighbours(AHero* OriginHero, UPARAM(ref)AHero* OutForward, UPARAM(ref)AHero* OutBack) const override;
+	virtual void GetNeighbours(AHero* OriginHero, AHero* OutForward, AHero* OutBack) const override;
 
 	UFUNCTION(BlueprintCallable)
 	virtual ESquadRow GetRow(AHero* Hero) const override;
