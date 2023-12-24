@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -12,30 +10,36 @@ UCLASS(BlueprintType)
 class TACTICAL_TRIUMPH_API UHeroData : public UPrimaryDataAsset
 {
 	GENERATED_BODY()
+
 public:
-	UFUNCTION(BlueprintCallable)
-	float GetHealth() const {return Health;}
+	UFUNCTION(BlueprintCallable, Category = "View")
+	FString GetName() const { return Name; }
+	
+	UFUNCTION(BlueprintCallable, Category = "Attributes")
+	float GetHealth() const { return Health; }
 
-	UFUNCTION(BlueprintCallable)
-	float GetAttack() const {return Attack;}
+	UFUNCTION(BlueprintCallable, Category = "Attributes")
+	float GetAttack() const { return Attack; }
 
-	UFUNCTION(BlueprintCallable)
-	USkeletalMesh* GetMesh() const {return Mesh;}
+	UFUNCTION(BlueprintCallable, Category = "View")
+	USkeletalMesh* GetMesh() const { return Mesh; }
 
-	UFUNCTION(BlueprintCallable)
-	TMap<FGameplayTag, TSubclassOf<UHeroGameplayAbility>>  GetAbilities() const {return Abilities;};
+	UFUNCTION(BlueprintCallable, Category = "Abilities")
+	TMap<FGameplayTag, TSubclassOf<UHeroGameplayAbility>> GetAbilities() const { return Abilities; };
 
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "View")
+	FString Name;
+	UPROPERTY
+	(EditAnywhere, BlueprintReadOnly, Category = "Attributes")
 	float Health;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attributes")
 	float Attack;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "View")
 	USkeletalMesh* Mesh;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Abilities")
 	TMap<FGameplayTag, TSubclassOf<UHeroGameplayAbility>> Abilities;
-	
 };

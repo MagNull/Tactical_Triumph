@@ -16,7 +16,6 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-	virtual void BeginDestroy() override;
 
 	UPROPERTY(EditAnywhere)
 	ACardLibrary* CardLibrary;

@@ -12,8 +12,6 @@ bool ADropZone::GetIsOccupied() const
 
 AHero* ADropZone::GetHero() const
 {
-	if(Hero == nullptr)
-		return nullptr;
 	return Hero;
 }
 

@@ -13,11 +13,6 @@ void UDeck::BeginPlay()
 	Cards = CardLibrary->LoadCards();
 }
 
-void UDeck::BeginDestroy()
-{
-	Super::BeginDestroy();
-}
-
 int UDeck::GetCount() const
 {
 	return Cards.Num();

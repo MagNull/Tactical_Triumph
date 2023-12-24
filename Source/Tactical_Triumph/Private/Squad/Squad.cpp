@@ -207,27 +207,33 @@ void USquad::AddSquadEffect(TSubclassOf<UGameplayEffect> Effect)
 	SquadEffects.Add(Effect);
 	for (const auto DropZone : DropZones)
 	{
-		UAbilitySystemComponent* TargetASC = DropZone->GetHero()->GetAbilitySystemComponent();
+		const AHero* Hero = DropZone->GetHero();
+		if(!Hero)
+			continue;
+		UAbilitySystemComponent* TargetASC = Hero->GetAbilitySystemComponent();
 		TargetASC->ApplyGameplayEffectToSelf(Effect.GetDefaultObject(), 0, TargetASC->MakeEffectContext());
 	}
 }
 
 void USquad::AddSquadAbility(TSubclassOf<UHeroGameplayAbility> Ability, bool activate)
 {
-	// 	SquadAbilities.Add(Ability);
-	// 	for (const auto DropZone : DropZones)
-	// 	{
-	// 		UAbilitySystemComponent* TargetASC = DropZone->GetHero()->GetAbilitySystemComponent();
-	// 		if (activate)
-	// 		{
-	// 			const FGameplayAbilitySpecHandle AbilitySpec = TargetASC->GiveAbility(Ability.GetDefaultObject());
-	// 			TargetASC->TryActivateAbility(AbilitySpec);
-	// 		}
-	// 		else
-	// 		{
-	// 			TargetASC->GiveAbility(Ability.GetDefaultObject());
-	// 		}
-	// 	}
+	SquadAbilities.Add(Ability);
+	for (const auto DropZone : DropZones)
+	{
+		const AHero* Hero = DropZone->GetHero();
+		if(!Hero)
+			continue;
+		UAbilitySystemComponent* TargetASC = Hero->GetAbilitySystemComponent();
+		if (activate)
+		{
+			const FGameplayAbilitySpecHandle AbilitySpec = TargetASC->GiveAbility(Ability.GetDefaultObject());
+			TargetASC->TryActivateAbility(AbilitySpec);
+		}
+		else
+		{
+			TargetASC->GiveAbility(Ability.GetDefaultObject());
+		}
+	}
 }
 
 void USquad::OnSetHero(AHero* NewHero)
