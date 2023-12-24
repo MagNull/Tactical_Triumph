@@ -1,3 +1,5 @@
+#pragma once
+
 #include "CoreMinimal.h"
 #include "DragAndDrop/DropZone.h"
 #include "Templates/Tuple.h"

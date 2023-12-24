@@ -165,13 +165,8 @@ UObject* USquad::GetPlayerOwner() const
 
 ADropZone* USquad::GetDropZone(ESquadRow row, ESquadColumn column) const
 {
-	UE_LOG(LogTemp, Display, TEXT("DropZone row to find: %d"), static_cast<int>(row));
-	UE_LOG(LogTemp, Display, TEXT("DropZone column to find: %d"), static_cast<int>(column));
-	UE_LOG(LogTemp, Display, TEXT("DropZone size is: %d"), DropZones.Num());
 	for (const auto DropZone : DropZones)
 	{
-		UE_LOG(LogTemp, Display, TEXT("DropZone row: %d"), static_cast<int>(DropZone->Row));
-		UE_LOG(LogTemp, Display, TEXT("DropZone column: %d"), static_cast<int>(DropZone->Column));
 		if (static_cast<int>(DropZone->Row) == static_cast<int>(row) &&
 			static_cast<int>(DropZone->Column) == static_cast<int>(column))
 		{
