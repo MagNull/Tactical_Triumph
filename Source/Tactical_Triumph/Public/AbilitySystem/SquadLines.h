@@ -3,15 +3,15 @@
 UENUM(BlueprintType)
 enum class ESquadRow
 {
-	Vanguard,
-	Flank,
-	Back
+	Vanguard = 0,
+	Flank = 1,
+	Back = 2
 };
 
 UENUM(BlueprintType)
 enum class ESquadColumn
 {
-	Top,
-	Mid,
-	Bottom
+	Top = 0,
+	Mid = 1,
+	Bottom = 2
 };

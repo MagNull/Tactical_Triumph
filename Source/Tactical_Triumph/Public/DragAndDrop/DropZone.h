@@ -11,27 +11,36 @@ UCLASS()
 class TACTICAL_TRIUMPH_API ADropZone : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+	DECLARE_MULTICAST_DELEGATE_OneParam(FOnSetHero, AHero*);
+
+public:
 	ADropZone();
 
 protected:
-	bool IsOccupied;
 	AHero* Hero;
-	
-public:	
+
+public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	ESquadColumn Column;
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	ESquadRow Row;
-	
+
+	UPROPERTY(EditAnywhere)
+	class APlayerPawn* PlayerOwnerPawn;
+
 	UFUNCTION(BlueprintCallable)
 	bool GetIsOccupied() const;
 
 	UFUNCTION(BlueprintCallable)
 	AHero* GetHero() const;
-	
+
+	FOnSetHero OnSetHero;
+
 	UFUNCTION(BlueprintCallable)
-	void SetHero(AHero* NewHero);
+	virtual void SetHero(AHero* NewHero);
+
+	UFUNCTION(BlueprintCallable)
+	bool IsCenter();
 };

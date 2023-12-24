@@ -1,5 +1,6 @@
 #include "CoreMinimal.h"
 #include "DragAndDrop/DropZone.h"
+#include "Templates/Tuple.h"
 #include "ISquad.h"
 #include "AbilitySystem/Hero.h"
 #include "AbilitySystem/SquadLines.h"
@@ -14,6 +15,9 @@ class TACTICAL_TRIUMPH_API USquad : public UActorComponent, public ISquad
 public:
 	USquad();
 
+	virtual void BeginPlay() override;
+	virtual void BeginDestroy() override;
+
 	UFUNCTION(BlueprintCallable)
 	virtual TArray<AHero*> GetHeroesInColumn(ESquadColumn Column) const override;
 
@@ -22,9 +26,13 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	virtual TArray<AHero*> GetHeroes() const override;
+	virtual void GetNeighbours(AHero* OriginHero, AHero*& OutForward, AHero*& OutBack) const override;
 
 	UFUNCTION(BlueprintCallable)
-	virtual void GetNeighbours(AHero* OriginHero, AHero* OutForward, AHero* OutBack) const override;
+	AHero* GetForwardNeighbour(AHero* OriginHero);
+
+	UFUNCTION(BlueprintCallable)
+	AHero* GetBackNeighbour(AHero* OriginHero);
 
 	UFUNCTION(BlueprintCallable)
 	virtual ESquadRow GetRow(AHero* Hero) const override;
@@ -33,16 +41,17 @@ public:
 	virtual ESquadColumn GetColumn(AHero* Hero) const override;
 
 	UFUNCTION(BlueprintCallable)
-	virtual AHero* GetLeader() const override;
-	
+	virtual AHero* GetLeader() override;
+
 	AHero* GetHero(ESquadRow Row, ESquadColumn Column) const;
 
 	UFUNCTION(BlueprintCallable)
 	virtual UObject* GetPlayerOwner() const override;
 
-	UFUNCTION(BlueprintCallable)
-	void AddHero(ADropZone* NewDropZone);
+	ADropZone* GetDropZone(ESquadRow row, ESquadColumn column) const;
 
+	UFUNCTION(BlueprintCallable)
+	ADropZone* GetCenterDropZone();
 	UFUNCTION(BlueprintCallable)
 	virtual void AddSquadEffect(TSubclassOf<UGameplayEffect> Effect) override;
 
@@ -51,7 +60,10 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	virtual void AddSquadAbility(TSubclassOf<UHeroGameplayAbility> Ability, bool activate) override;
-	
+
+	void OnSetHero(AHero* NewHero);
+
+protected:
 	UFUNCTION(BlueprintCallable)
 	virtual TArray<TSubclassOf<UHeroGameplayAbility>> GetSquadAbilities() const override { return SquadAbilities; }
 
@@ -60,4 +72,9 @@ private:
 	TArray<ADropZone*> DropZones;
 	TArray<TSubclassOf<UGameplayEffect>> SquadEffects;
 	TArray<TSubclassOf<UHeroGameplayAbility>> SquadAbilities;
+
+	UPROPERTY(EditAnywhere)
+	AHero* Leader;
+
+	FDelegateHandle OnSetHeroHandle;
 };

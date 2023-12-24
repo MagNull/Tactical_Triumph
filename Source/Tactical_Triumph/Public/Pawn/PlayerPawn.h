@@ -21,22 +21,14 @@ public:
 	virtual void BeginPlay() override;
 
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
-	
-protected:
-	
-	UPROPERTY()
-	class UHandle* handle_;
 
-	UPROPERTY()
-	class USquad* Squad;
-
-public:	 
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	UFUNCTION(BlueprintCallable)
-	TArray<UDA_Card*> GetCards() const;
+	// UFUNCTION(BlueprintCallable)
+	// TArray<UDA_Card*> GetCards() const;
 };

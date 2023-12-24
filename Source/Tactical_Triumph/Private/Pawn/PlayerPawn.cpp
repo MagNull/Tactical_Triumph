@@ -2,8 +2,7 @@
 
 
 #include "Pawn/PlayerPawn.h"
-#include "DragAndDrop//DA_Card.h"
-#include "Tactical_Triumph/Handle.h"
+#include "Deck.h"
 #include "Squad/Squad.h"
 
 // Sets default values
@@ -11,8 +10,6 @@ APlayerPawn::APlayerPawn()
 {
 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	handle_ = CreateDefaultSubobject<UHandle>(TEXT("Test handle"));
-	Squad = CreateDefaultSubobject<USquad>(TEXT("Test squad"));
 }
 
 // Called when the game starts or when spawned
@@ -36,9 +33,4 @@ void APlayerPawn::Tick(float DeltaTime)
 void APlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-}
-
-TArray<UDA_Card*> APlayerPawn::GetCards() const
-{
-	return handle_->cards;
 }
