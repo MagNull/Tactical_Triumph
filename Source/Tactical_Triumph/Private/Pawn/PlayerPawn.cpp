@@ -2,7 +2,7 @@
 
 
 #include "Pawn/PlayerPawn.h"
-#include "Handle.h"
+#include "Deck.h"
 #include "Squad/Squad.h"
 
 // Sets default values
@@ -10,8 +10,6 @@ APlayerPawn::APlayerPawn()
 {
 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	Handle = CreateDefaultSubobject<UHandle>(TEXT("Test handle"));
-	Squad = CreateDefaultSubobject<USquad>(TEXT("Test squad"));
 }
 
 // Called when the game starts or when spawned
@@ -36,8 +34,3 @@ void APlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
-
-// TArray<UDA_Card*> APlayerPawn::GetCards() const
-// {
-// 	return handle_->cards;
-// }

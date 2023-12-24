@@ -21,14 +21,6 @@ public:
 	virtual void BeginPlay() override;
 
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
-	
-protected:
-	
-	UPROPERTY()
-	class UHandle* Handle;
-
-	UPROPERTY()
-	class USquad* Squad;;
 
 public:
 	// Called every frame

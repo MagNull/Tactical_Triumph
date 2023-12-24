@@ -12,7 +12,7 @@ class ISquad
 public:
 	virtual ~ISquad() = default;
 	
-	virtual void GetNeighbours(AHero* OriginHero, AHero* OutForward, AHero* OutBack) const = 0;
+	virtual void GetNeighbours(AHero* OriginHero, AHero*& OutForward, AHero*& OutBack) const = 0;
 	
 	virtual TArray<AHero*> GetHeroesInColumn(ESquadColumn Column) const = 0;
 	virtual TArray<AHero*> GetHeroesInRow(ESquadRow Row) const = 0;

@@ -1,5 +1,6 @@
 #include "CoreMinimal.h"
 #include "DragAndDrop/DropZone.h"
+#include "Templates/Tuple.h"
 #include "ISquad.h"
 #include "AbilitySystem/Hero.h"
 #include "AbilitySystem/SquadLines.h"
@@ -14,6 +15,9 @@ class TACTICAL_TRIUMPH_API USquad : public UActorComponent, public ISquad
 public:
 	USquad();
 
+	virtual void BeginPlay() override;
+	virtual void BeginDestroy() override;
+
 	UFUNCTION(BlueprintCallable)
 	virtual TArray<AHero*> GetHeroesInColumn(ESquadColumn Column) const override;
 
@@ -21,7 +25,13 @@ public:
 	virtual TArray<AHero*> GetHeroesInRow(ESquadRow Row) const override;
 
 	UFUNCTION(BlueprintCallable)
-	virtual void GetNeighbours(AHero* OriginHero, UPARAM(ref)AHero* OutForward, UPARAM(ref)AHero* OutBack) const override;
+	virtual void GetNeighbours(AHero* OriginHero, AHero*& OutForward, AHero*& OutBack) const override;
+
+	UFUNCTION(BlueprintCallable)
+	AHero* GetForwardNeighbour(AHero* OriginHero);
+
+	UFUNCTION(BlueprintCallable)
+	AHero* GetBackNeighbour(AHero* OriginHero);
 
 	UFUNCTION(BlueprintCallable)
 	virtual ESquadRow GetRow(AHero* Hero) const override;
@@ -31,7 +41,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	virtual AHero* GetLeader() override;
-	
+
 	AHero* GetHero(ESquadRow Row, ESquadColumn Column) const;
 
 	UFUNCTION(BlueprintCallable)
@@ -51,10 +61,7 @@ public:
 	virtual void AddSquadAbility(TSubclassOf<UHeroGameplayAbility> Ability, bool activate) override;
 
 	void OnSetHero(AHero* NewHero);
-	
-	UFUNCTION(BlueprintCallable)
-	void AddDropZone(ADropZone* NewDropZone);
-	
+
 protected:
 	UFUNCTION(BlueprintCallable)
 	virtual TArray<TSubclassOf<UHeroGameplayAbility>> GetSquadAbilities() const override { return SquadAbilities; }

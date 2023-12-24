@@ -1,7 +1,5 @@
 #include "DragAndDrop/DropZone.h"
-#include "AbilitySystem/Hero.h"
 
-// Sets default values
 ADropZone::ADropZone()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -14,6 +12,8 @@ bool ADropZone::GetIsOccupied() const
 
 AHero* ADropZone::GetHero() const
 {
+	if(Hero == nullptr)
+		return nullptr;
 	return Hero;
 }
 
