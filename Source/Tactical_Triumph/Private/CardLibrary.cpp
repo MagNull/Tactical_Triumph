@@ -8,17 +8,7 @@ ACardLibrary::ACardLibrary()
 	PrimaryActorTick.bCanEverTick = false;
 }
 
-void ACardLibrary::BeginPlay()
-{
-	Super::BeginPlay();
-
-	UE_LOG(LogTemp, Warning, TEXT("BeginPlay CardLibrary"));
-}
-
-void ACardLibrary::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-}
+// Вернуть первых плееров в столбце != nullptr
 
 TArray<UHeroData*> ACardLibrary::LoadCards()
 {

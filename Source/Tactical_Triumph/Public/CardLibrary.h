@@ -16,14 +16,9 @@ class TACTICAL_TRIUMPH_API ACardLibrary : public AActor
 public:	
 	ACardLibrary();
 
-protected:
-	virtual void BeginPlay() override;
-	
-public:	
-	virtual void Tick(float DeltaTime) override;
-
 	TArray<UHeroData*> LoadCards();
 
+private:
 	UPROPERTY(EditAnywhere)
 	FString FolderPathToAssets;
 };

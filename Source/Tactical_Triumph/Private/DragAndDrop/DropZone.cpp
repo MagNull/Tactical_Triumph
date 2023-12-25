@@ -12,8 +12,6 @@ bool ADropZone::GetIsOccupied() const
 
 AHero* ADropZone::GetHero() const
 {
-	if(Hero == nullptr)
-		return nullptr;
 	return Hero;
 }
 
@@ -30,4 +28,9 @@ void ADropZone::SetHero(AHero* NewHero)
 bool ADropZone::IsCenter()
 {
 	return Column == ESquadColumn::Mid && Row == ESquadRow::Flank;
+}
+
+APlayerPawn* ADropZone::GetPlayerOwner()
+{
+	return PlayerOwnerPawn;
 }

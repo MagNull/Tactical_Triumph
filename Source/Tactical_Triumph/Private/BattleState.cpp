@@ -2,6 +2,24 @@
 #include "Kismet/GameplayStatics.h"
 #include "Pawn/PlayerPawn.h"
 
+void UBattleState::Reset()
+{
+	Players = {};
+	PlayerTurn = EBattleState::FirstPlayerTurn;
+	LineTurn = ESquadRow::Vanguard;
+	IsFirstPlayerActive = true;
+}
+
+void UBattleState::InitializePlayers(APlayerPawn* FirstPlayerPawn, APlayerPawn* SecondPlayerPawn)
+{
+	while (!Players.IsEmpty())
+	{
+		Players.RemoveAt(0);
+	}
+	AddPlayer(FirstPlayerPawn);
+	AddPlayer(SecondPlayerPawn);
+}
+
 void UBattleState::ChangePlayerTurn()
 {
 	PlayerTurn = PlayerTurn == EBattleState::FirstPlayerTurn
@@ -9,24 +27,33 @@ void UBattleState::ChangePlayerTurn()
 		             : EBattleState::FirstPlayerTurn;
 }
 
+void UBattleState::ChangeActivePlayer()
+{
+	IsFirstPlayerActive = !IsFirstPlayerActive;
+}
+
 void UBattleState::ChangeLineTurn()
 {
 	LineTurn = static_cast<ESquadRow>((static_cast<int>(LineTurn) + 1) % sizeof(ESquadRow));
 }
 
-APawn* UBattleState::GetPlayerPawn(const int PlayerIndex)
+APlayerPawn* UBattleState::GetActivePlayer()
 {
-	return Players.Num() > PlayerIndex ? Players[PlayerIndex] : nullptr;
+	if (Players.IsEmpty() || Players.Num() < 2)
+		return nullptr;
+	return IsFirstPlayerActive ? Players[0] : Players[1];
 }
 
-void UBattleState::InitializePlayers(UObject* WorldContextObject)
+APlayerPawn* UBattleState::GetNotActivePlayer()
 {
-	while (!Players.IsEmpty())
-	{
-		Players.RemoveAt(0);
-	}
-	AddPlayer(WorldContextObject, 0);
-	AddPlayer(WorldContextObject, 1);
+	if (Players.IsEmpty() || Players.Num() < 2)
+		return nullptr;
+	return IsFirstPlayerActive ? Players[1] : Players[0];
+}
+
+APlayerPawn* UBattleState::GetPlayerPawn(const int PlayerIndex)
+{
+	return Players.Num() > PlayerIndex ? Players[PlayerIndex] : nullptr;
 }
 
 EBattleState UBattleState::GetPlayerTurn()
@@ -49,16 +76,14 @@ int UBattleState::GetLineTurnInt()
 	return static_cast<int>(LineTurn);
 }
 
-void UBattleState::AddPlayer(const UObject* WorldContextObject, const int PlayerIndex)
+void UBattleState::AddPlayer(APlayerPawn* Player)
 {
-	if (APlayerPawn* PlayerPawn = static_cast<APlayerPawn*>(UGameplayStatics::GetPlayerPawn(
-			WorldContextObject->GetWorld(), PlayerIndex));
-		PlayerPawn == nullptr)
+	if (Player == nullptr)
 	{
-		UE_LOG(LogTemp, Display, TEXT("Player Pawn with index %d is null"), PlayerIndex);
+		UE_LOG(LogTemp, Display, TEXT("Player Pawn is not valid or null"));
 	}
 	else
 	{
-		Players.Add(PlayerPawn);
+		Players.Add(Player);
 	}
 }
