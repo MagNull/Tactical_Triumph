@@ -5,7 +5,6 @@
 
 #include "AbilitySystem/Hero.h"
 #include "Kismet/GameplayStatics.h"
-#include "Squad/ISquad.h"
 #include "Squad/Squad.h"
 
 
@@ -76,7 +75,7 @@ FGameplayAbilityTargetDataHandle AHeroAbilityTargeting::MakeTargetData(const FHi
 		}
 	case ESelectionType::Column:
 		{
-			const ISquad* Squad = UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->GetComponentByClass<USquad>();
+			const USquad* Squad = UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->GetComponentByClass<USquad>();
 			const ESquadColumn TargetColumn = Squad->GetColumn(TargetHero);
 			for (const auto Hero : Squad->GetHeroesInColumn(TargetColumn))
 			{
@@ -86,7 +85,7 @@ FGameplayAbilityTargetDataHandle AHeroAbilityTargeting::MakeTargetData(const FHi
 		}
 	case ESelectionType::Row:
 		{
-			const ISquad* Squad = UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->GetComponentByClass<USquad>();
+			const USquad* Squad = UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->GetComponentByClass<USquad>();
 			const ESquadRow TargetRow = Squad->GetRow(TargetHero);
 			for (const auto Hero : Squad->GetHeroesInRow(TargetRow))
 			{

@@ -44,7 +44,6 @@ TArray<AHero*> USquad::GetHeroesInColumn(ESquadColumn column) const
 
 void USquad::GetNeighbours(AHero* OriginHero, AHero*& OutForward, AHero*& OutBack) const
 {
-	UE_LOG(LogTemp, Display, TEXT("Start"));
 	const ADropZone* FindDropZone = nullptr;
 
 	for (const auto DropZone : DropZones)
@@ -55,14 +54,12 @@ void USquad::GetNeighbours(AHero* OriginHero, AHero*& OutForward, AHero*& OutBac
 		}
 	}
 
-	UE_LOG(LogTemp, Display, TEXT("Branch"));
 	if (FindDropZone == nullptr)
 	{
 		OutForward = nullptr;
 		OutBack = nullptr;
 		return;
 	}
-	UE_LOG(LogTemp, Display, TEXT("Post Branch"));
 
 	if (FindDropZone->Row != ESquadRow::Vanguard)
 	{
@@ -94,7 +91,7 @@ AHero* USquad::GetForwardNeighbour(AHero* OriginHero)
 {
 	AHero *Forward = nullptr, *Back = nullptr;
 	GetNeighbours(OriginHero, Forward, Back);
-
+	UE_LOG(LogTemp, Display, TEXT("%hd"), Forward == nullptr)
 	if (Forward == nullptr)
 		return nullptr;
 
@@ -202,16 +199,17 @@ ADropZone* USquad::GetCenterDropZone()
 	return GetDropZone(ESquadRow::Flank, ESquadColumn::Mid);
 }
 
-void USquad::AddSquadEffect(TSubclassOf<UGameplayEffect> Effect)
+void USquad::AddSquadEffect(FGameplayEffectSpecHandle Effect)
 {
 	SquadEffects.Add(Effect);
 	for (const auto DropZone : DropZones)
 	{
 		const AHero* Hero = DropZone->GetHero();
-		if(!Hero)
+		if (!Hero)
 			continue;
 		UAbilitySystemComponent* TargetASC = Hero->GetAbilitySystemComponent();
-		TargetASC->ApplyGameplayEffectToSelf(Effect.GetDefaultObject(), 0, TargetASC->MakeEffectContext());
+		
+		TargetASC->ApplyGameplayEffectSpecToSelf(*Effect.Data);
 	}
 }
 
@@ -221,7 +219,7 @@ void USquad::AddSquadAbility(TSubclassOf<UHeroGameplayAbility> Ability, bool act
 	for (const auto DropZone : DropZones)
 	{
 		const AHero* Hero = DropZone->GetHero();
-		if(!Hero)
+		if (!Hero)
 			continue;
 		UAbilitySystemComponent* TargetASC = Hero->GetAbilitySystemComponent();
 		if (activate)
@@ -241,7 +239,7 @@ void USquad::OnSetHero(AHero* NewHero)
 	UAbilitySystemComponent* TargetASC = NewHero->GetAbilitySystemComponent();
 	for (auto Effect : SquadEffects)
 	{
-		TargetASC->ApplyGameplayEffectToSelf(Effect.GetDefaultObject(), 0, TargetASC->MakeEffectContext());
+		TargetASC->ApplyGameplayEffectSpecToSelf(*Effect.Data);
 	}
 	for (auto Ability : SquadAbilities)
 	{
