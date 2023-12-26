@@ -73,7 +73,7 @@ public:
 	ADropZone* GetCenterDropZone();
 
 	UFUNCTION(BlueprintCallable)
-	TArray<AHero*> GetFirstPersonsInColumns();
+	TArray<AHero*> GetFirstHeroesInColumns();
 
 	UFUNCTION(BlueprintCallable)
 	void AddSquadAbility(FSquadAbility SquadAbility, bool activate);

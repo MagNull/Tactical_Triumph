@@ -334,7 +334,7 @@ void USquadComponent::RemoveSquadAbility(TSubclassOf<UGameplayAbility> SourceAbi
 	}
 }
 
-TArray<AHero*> USquadComponent::GetFirstPersonsInColumns()
+TArray<AHero*> USquadComponent::GetFirstHeroesInColumns()
 {
 	TArray<AHero*> Result;
 
