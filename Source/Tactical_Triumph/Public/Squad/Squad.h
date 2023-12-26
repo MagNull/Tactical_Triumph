@@ -7,6 +7,28 @@
 #include "Components/ActorComponent.h"
 #include "Squad.generated.h"
 
+USTRUCT(BlueprintType)
+struct FSquadAbility
+{
+	GENERATED_BODY()
+
+	TSubclassOf<UGameplayAbility> Ability;
+	TSubclassOf<UGameplayAbility> SourceAbility;
+
+	bool operator==(const FSquadAbility&) const;
+};
+
+USTRUCT(BlueprintType)
+struct FSquadEffect
+{
+	GENERATED_BODY()
+	
+	FGameplayEffectSpecHandle EffectSpecHandle;
+	TSubclassOf<UGameplayAbility> SourceAbility;
+
+	bool operator==(const FSquadEffect&) const;
+};
+
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class TACTICAL_TRIUMPH_API USquad : public UActorComponent
 {
@@ -51,27 +73,22 @@ public:
 	ADropZone* GetDropZone(ESquadRow row, ESquadColumn column) const;
 	UFUNCTION(BlueprintCallable)
 	ADropZone* GetCenterDropZone();
-	
-	UFUNCTION(BlueprintCallable)
-	virtual void AddSquadEffect(FGameplayEffectSpecHandle Effect);
 
 	UFUNCTION(BlueprintCallable)
-	virtual TArray<FGameplayEffectSpecHandle> GetSquadEffects() const { return SquadEffects; }
+	void AddSquadEffect(FSquadEffect SquadEffect);
+	void RemoveSquadEffect(TSubclassOf<UGameplayAbility> SourceAbility);
 
 	UFUNCTION(BlueprintCallable)
-	virtual void AddSquadAbility(TSubclassOf<UHeroGameplayAbility> Ability, bool activate);
+	void AddSquadAbility(FSquadAbility SquadAbility, bool activate);
+	void RemoveSquadAbility(TSubclassOf<UGameplayAbility> SourceAbility);
 
 	void OnSetHero(AHero* NewHero);
-
-protected:
-	UFUNCTION(BlueprintCallable)
-	virtual TArray<TSubclassOf<UHeroGameplayAbility>> GetSquadAbilities() const { return SquadAbilities; }
 
 private:
 	UPROPERTY(EditAnywhere)
 	TArray<ADropZone*> DropZones;
-	TArray<FGameplayEffectSpecHandle> SquadEffects;
-	TArray<TSubclassOf<UHeroGameplayAbility>> SquadAbilities;
+	TArray<FSquadEffect> SquadEffects;
+	TArray<FSquadAbility> SquadAbilities;
 
 	UPROPERTY(EditAnywhere)
 	AHero* Leader;

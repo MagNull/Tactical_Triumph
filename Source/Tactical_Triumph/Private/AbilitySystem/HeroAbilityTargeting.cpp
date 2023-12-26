@@ -1,6 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "Tactical_Triumph/Public/AbilitySystem/HeroAbilityTargeting.h"
 
 #include "AbilitySystem/Hero.h"

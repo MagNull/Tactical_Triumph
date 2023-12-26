@@ -4,10 +4,10 @@
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemInterface.h"
 #include "GameplayTagContainer.h"
-#include "HeroAbilitySystemComponent.h"
 
 #include "Hero.generated.h"
 
+class UHeroAbilitySystemComponent;
 class UHeroAttributeSet;
 class UGameplayEffect;
 
@@ -20,10 +20,7 @@ class TACTICAL_TRIUMPH_API AHero : public AActor, public IAbilitySystemInterface
 public:
 	AHero();
 
-	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override
-	{
-		return Cast<UAbilitySystemComponent>(AbilitySystemComponent);
-	}
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
 	UFUNCTION(BlueprintCallable)
 	float GetHealth() const;
@@ -54,6 +51,8 @@ public:
 	USkeletalMeshComponent* Mesh;
 
 protected:
+	UFUNCTION(BlueprintImplementableEvent)
+	void Died();
 	void HandleDamageChanged(float DamageAmount, const FGameplayTagContainer DamageTags,
 					  UAbilitySystemComponent* DamageInstigator, UAbilitySystemComponent* Target);
 
