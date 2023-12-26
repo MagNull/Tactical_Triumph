@@ -1,13 +1,18 @@
 #include "BattleState.h"
-#include "Kismet/GameplayStatics.h"
 #include "Pawn/PlayerPawn.h"
 
 void UBattleState::Reset()
 {
 	Players = {};
-	PlayerTurn = EBattleState::FirstPlayerTurn;
+	ResetWithoutPlayers();
+}
+
+void UBattleState::ResetWithoutPlayers()
+{
+	StartPlayerIndex = 1;
 	LineTurn = ESquadRow::Vanguard;
 	IsFirstPlayerActive = true;
+	TurnCount = 1;
 }
 
 void UBattleState::InitializePlayers(APlayerPawn* FirstPlayerPawn, APlayerPawn* SecondPlayerPawn)
@@ -20,16 +25,16 @@ void UBattleState::InitializePlayers(APlayerPawn* FirstPlayerPawn, APlayerPawn* 
 	AddPlayer(SecondPlayerPawn);
 }
 
-void UBattleState::ChangePlayerTurn()
+void UBattleState::ChangeStartPlayerIndex()
 {
-	PlayerTurn = PlayerTurn == EBattleState::FirstPlayerTurn
-		             ? EBattleState::SecondPlayerTurn
-		             : EBattleState::FirstPlayerTurn;
+	StartPlayerIndex += 1;
+	StartPlayerIndex %= 2;
 }
 
 void UBattleState::ChangeActivePlayer()
 {
 	IsFirstPlayerActive = !IsFirstPlayerActive;
+	UE_LOG(LogTemp, Display, TEXT("Active player: %d"), IsFirstPlayerActive);
 }
 
 void UBattleState::ChangeLineTurn()
@@ -51,19 +56,29 @@ APlayerPawn* UBattleState::GetNotActivePlayer()
 	return IsFirstPlayerActive ? Players[1] : Players[0];
 }
 
+APlayerPawn* UBattleState::GetAttackPlayer()
+{
+	return Players[StartPlayerIndex];
+}
+
+APlayerPawn* UBattleState::GetDefensePlayer()
+{
+	return Players[(StartPlayerIndex + 1) % 2];
+}
+
+int UBattleState::GetStartPlayerIndex()
+{
+	return StartPlayerIndex;
+}
+
+int UBattleState::GetActivePlayerIndex()
+{
+	return IsFirstPlayerActive;
+}
+
 APlayerPawn* UBattleState::GetPlayerPawn(const int PlayerIndex)
 {
 	return Players.Num() > PlayerIndex ? Players[PlayerIndex] : nullptr;
-}
-
-EBattleState UBattleState::GetPlayerTurn()
-{
-	return PlayerTurn;
-}
-
-int UBattleState::GetPlayerTurnInt()
-{
-	return static_cast<int>(PlayerTurn);
 }
 
 ESquadRow UBattleState::GetLineTurn()
@@ -74,6 +89,16 @@ ESquadRow UBattleState::GetLineTurn()
 int UBattleState::GetLineTurnInt()
 {
 	return static_cast<int>(LineTurn);
+}
+
+void UBattleState::AddTurnCount()
+{
+	TurnCount += 1;
+}
+
+int UBattleState::GetTurnCount()
+{
+	return TurnCount;
 }
 
 void UBattleState::AddPlayer(APlayerPawn* Player)

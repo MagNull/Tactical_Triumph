@@ -5,6 +5,16 @@ ADropZone::ADropZone()
 	PrimaryActorTick.bCanEverTick = true;
 }
 
+int ADropZone::GetRowInt() const
+{
+	return static_cast<int>(Row);
+}
+
+int ADropZone::GetColumnInt() const
+{
+	return static_cast<int>(Column);
+}
+
 bool ADropZone::GetIsOccupied() const
 {
 	return Hero != nullptr;

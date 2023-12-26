@@ -18,6 +18,12 @@ public:
 	ADropZone();
 
 	UFUNCTION(BlueprintCallable)
+	int GetRowInt() const;
+
+	UFUNCTION(BlueprintCallable)
+	int GetColumnInt() const;
+	
+	UFUNCTION(BlueprintCallable)
 	bool GetIsOccupied() const;
 
 	UFUNCTION(BlueprintCallable)
