@@ -5,27 +5,29 @@
 #include "AbilitySystem/HeroGameplayAbility.h"
 #include "HeroAbilitySystemComponent.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class TACTICAL_TRIUMPH_API UHeroAbilitySystemComponent : public UAbilitySystemComponent
 {
 	GENERATED_BODY()
+	DECLARE_DELEGATE(FBeforeAllAbilitiesClearing)
 
 public:
 	UFUNCTION(BlueprintCallable)
 	void SetAbilitySquadLineMap(TMap<FGameplayTag, TSubclassOf<UHeroGameplayAbility>> map);
+	
 	virtual void BeginPlay() override;
 	virtual void BeginDestroy() override;
+	TArray<FActiveGameplayEffectHandle> GetActiveGameplayEffectsByAbility(const UGameplayAbility* InstigatorAbility) const;
 
 private:
 	void OnEffectApplied(UAbilitySystemComponent* ASC, const FGameplayEffectSpec& EffectSpec,
-	                     FActiveGameplayEffectHandle ActiveEffectHandle) const;
-
+						 FActiveGameplayEffectHandle ActiveEffectHandle);
 	UPROPERTY(EditAnywhere)
 	FGameplayTagContainer NotActivableAbilityTags;
+	UPROPERTY(EditAnywhere)
+	FGameplayTagContainer PositionTags;
 
 	TMap<FGameplayTag, TSubclassOf<UHeroGameplayAbility>> TagToAbilityMap;
 	FDelegateHandle EffectAppliedHandle;
+	FBeforeAllAbilitiesClearing OnBeforeAllAbilitiesClearingDelegate;
 };

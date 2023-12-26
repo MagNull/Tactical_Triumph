@@ -1,6 +1,6 @@
 ﻿#include "Tactical_Triumph/Public/AbilitySystem/Hero.h"
+#include "Tactical_Triumph/Public/AbilitySystem/HeroAbilitySystemComponent.h"
 #include "AbilitySystemComponent.h"
-#include "Kismet/GameplayStatics.h"
 #include "Tactical_Triumph/Public/AbilitySystem/HeroAttributeSet.h"
 
 AHero::AHero()
@@ -11,6 +11,11 @@ AHero::AHero()
 	AbilitySystemComponent->SetIsReplicated(true);
 
 	Attributes = CreateDefaultSubobject<UHeroAttributeSet>(TEXT("Attributes"));
+}
+
+UAbilitySystemComponent* AHero::GetAbilitySystemComponent() const
+{
+	return Cast<UAbilitySystemComponent>(AbilitySystemComponent);
 }
 
 float AHero::GetHealth() const
@@ -39,15 +44,19 @@ float AHero::GetMaxHealth() const
 }
 
 void AHero::HandleDamageChanged(float DamageAmount, const FGameplayTagContainer DamageTags,
-								UAbilitySystemComponent* DamageInstigator, UAbilitySystemComponent* Target)
+                                UAbilitySystemComponent* DamageInstigator, UAbilitySystemComponent* Target)
 {
 	OnDamageChanged(DamageAmount, DamageTags,
-					DamageInstigator, Target);
+	                DamageInstigator, Target);
 }
 
 void AHero::HandleHealthChanged(float deltaValue, const FGameplayTagContainer& eventTags)
 {
 	OnHealthChanged(deltaValue, eventTags);
+	if (GetHealth() <= 0)
+	{
+		Died();
+	}
 }
 
 void AHero::HandleAttackChanged(float deltaValue, const FGameplayTagContainer& eventTags)

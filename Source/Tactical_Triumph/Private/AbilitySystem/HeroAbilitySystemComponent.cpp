@@ -18,41 +18,58 @@ void UHeroAbilitySystemComponent::BeginDestroy()
 	OnGameplayEffectAppliedDelegateToSelf.Remove(EffectAppliedHandle);
 }
 
+TArray<FActiveGameplayEffectHandle> UHeroAbilitySystemComponent::GetActiveGameplayEffectsByAbility(
+	const UGameplayAbility* InstigatorAbility) const
+{
+	TArray<FActiveGameplayEffectHandle> Result;
+	const TArray<FActiveGameplayEffectHandle> EffectsContainer = GetActiveEffects({});
+	for (auto EffectSpecHandle : EffectsContainer)
+	{
+		FGameplayEffectContextHandle ContextHandle = GetActiveGameplayEffect(EffectSpecHandle)->Spec.GetContext();
+		const UGameplayAbility* EffectInstigatorAbility = ContextHandle.GetAbility();
+		if (EffectInstigatorAbility &&
+			EffectInstigatorAbility->GetClass() == InstigatorAbility->GetClass())
+		{
+			Result.Add(EffectSpecHandle);
+		}
+	}
+	return Result;
+}
+
 void UHeroAbilitySystemComponent::OnEffectApplied(UAbilitySystemComponent* ASC, const FGameplayEffectSpec& EffectSpec,
-                                                  FActiveGameplayEffectHandle ActiveEffectHandle) const
+                                                  FActiveGameplayEffectHandle ActiveEffectHandle)
 {
 	FGameplayTagContainer GrantedTags;
 	EffectSpec.GetAllGrantedTags(GrantedTags);
-	if (GrantedTags.Num() == 0)
+	if (!GrantedTags.HasAnyExact(PositionTags))
 		return;
-	
-	
+
 	for (auto TagAbilityPair : TagToAbilityMap)
 	{
 		UHeroGameplayAbility* Ability = TagAbilityPair.Value.GetDefaultObject();
 
 		//Clear all this ability duplicates
 		TArray<FGameplayAbilitySpecHandle> Abilities;
-		ASC->GetAllAbilities(Abilities);
+		GetAllAbilities(Abilities);
 		for (auto ASH : Abilities)
 		{
-			const UGameplayAbility* OtherAbility = ASC->FindAbilitySpecFromHandle(ASH)->Ability;
-			if(OtherAbility == Ability)
+			UGameplayAbility* OtherAbility = FindAbilitySpecFromHandle(ASH)->Ability;
+			if (OtherAbility == Ability)
 			{
-				ASC->ClearAbility(ASH);
+				ClearAbility(ASH);
 			}
 		}
-		
+
 		if (ASC->HasAnyMatchingGameplayTags(TagAbilityPair.Key.GetSingleTagContainer()))
 		{
 			if (Ability->AbilityTags.HasAny(NotActivableAbilityTags))
 			{
-				ASC->GiveAbility(Ability);
+				GiveAbility(Ability);
 			}
 			else
 			{
-				FGameplayAbilitySpecHandle AbilitySpec = ASC->GiveAbility(Ability);
-				ASC->TryActivateAbility(AbilitySpec);
+				FGameplayAbilitySpecHandle AbilitySpec = GiveAbility(Ability);
+				TryActivateAbility(AbilitySpec);
 			}
 		}
 	}
