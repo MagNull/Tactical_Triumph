@@ -79,7 +79,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void AddSquadAbility(FSquadAbility SquadAbility, bool activate);
 	void RemoveSquadAbility(TSubclassOf<UGameplayAbility> SourceAbility);
-    
+	UFUNCTION(BlueprintCallable)
+	TArray<AHero*> GetFirstPersonsInColumns();
+
 protected:
 	AHero* GetHero(ESquadRow Row, ESquadColumn Column) const;
     

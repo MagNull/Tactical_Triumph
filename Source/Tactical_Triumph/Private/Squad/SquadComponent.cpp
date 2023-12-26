@@ -322,6 +322,17 @@ void USquadComponent::RemoveSquadAbility(TSubclassOf<UGameplayAbility> SourceAbi
 	}
 }
 
+TArray<AHero*> USquadComponent::GetFirstPersonsInColumns()
+{
+	TArray<AHero*> Result;
+	
+	auto top_line = GetHeroesInColumn(ESquadColumn::Top);
+	auto middle_line = GetHeroesInColumn(ESquadColumn::Top);
+	auto bottom_line = GetHeroesInColumn(ESquadColumn::Top);
+
+	Result.Add()
+}
+
 void USquadComponent::OnSetHero(AHero* NewHero)
 {
 	UAbilitySystemComponent* TargetASC = NewHero->GetAbilitySystemComponent();
