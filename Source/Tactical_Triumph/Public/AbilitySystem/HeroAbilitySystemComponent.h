@@ -23,7 +23,7 @@ private:
 	void OnEffectApplied(UAbilitySystemComponent* ASC, const FGameplayEffectSpec& EffectSpec,
 						 FActiveGameplayEffectHandle ActiveEffectHandle);
 	UPROPERTY(EditAnywhere)
-	FGameplayTagContainer NotActivableAbilityTags;
+	FGameplayTagContainer ActivableAbilityTags;
 	UPROPERTY(EditAnywhere)
 	FGameplayTagContainer PositionTags;
 

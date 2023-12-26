@@ -39,8 +39,8 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnDamageChanged(float DamageAmount, const FGameplayTagContainer DamageTags,
-				   UAbilitySystemComponent* DamageInstigator, UAbilitySystemComponent* Target);
-	
+	                     UAbilitySystemComponent* DamageInstigator, UAbilitySystemComponent* Target);
+
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnHealthChanged(float deltaValue, const FGameplayTagContainer& eventTags);
 
@@ -54,13 +54,13 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent)
 	void Died();
 	void HandleDamageChanged(float DamageAmount, const FGameplayTagContainer DamageTags,
-					  UAbilitySystemComponent* DamageInstigator, UAbilitySystemComponent* Target);
+	                         UAbilitySystemComponent* DamageInstigator, UAbilitySystemComponent* Target);
 
 	void HandleHealthChanged(float deltaValue, const FGameplayTagContainer& eventTags);
-	
+
 	void HandleAttackChanged(float deltaValue, const FGameplayTagContainer& eventTags);
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UHeroAbilitySystemComponent* AbilitySystemComponent;
 
 private:

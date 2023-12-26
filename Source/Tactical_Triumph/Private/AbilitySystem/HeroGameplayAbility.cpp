@@ -34,14 +34,14 @@ void UHeroGameplayAbility::OnRemoveAbility(const FGameplayAbilityActorInfo* Acto
 {
 	OnAbilityRemoved();
 	RemoveCausedEffects(ActorInfo->OwnerActor.Get());
-	USquadComponent* Squad = UBattleState::GetActivePlayer()->GetComponentByClass<USquadComponent>();
-	if(Squad == nullptr)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("%s get Squad is null"), *GetName());
-		return;
-	}
-	Squad->RemoveSquadAbility(GetClass());
-	Squad->RemoveSquadEffect(GetClass());
+	 USquadComponent* Squad = UBattleState::GetActivePlayer()->GetComponentByClass<USquadComponent>();
+	 if(Squad == nullptr)
+	 {
+	 	UE_LOG(LogTemp, Warning, TEXT("%s get Squad is null"), *GetName());
+	 	return;
+	 }
+	 Squad->RemoveSquadAbility(GetClass());
+	 Squad->RemoveSquadEffect(GetClass());
 }
 
 FSquadAbility UHeroGameplayAbility::GetSquadAbility(TSubclassOf<UGameplayAbility> Ability) const
