@@ -27,7 +27,6 @@ TArray<FActiveGameplayEffectHandle> UHeroAbilitySystemComponent::GetActiveGamepl
 	{
 		FGameplayEffectContextHandle ContextHandle = GetActiveGameplayEffect(EffectSpecHandle)->Spec.GetContext();
 		const UGameplayAbility* EffectInstigatorAbility = ContextHandle.GetAbility();
-
 		if (EffectInstigatorAbility &&
 			EffectInstigatorAbility->GetClass() == InstigatorAbility->GetClass())
 		{

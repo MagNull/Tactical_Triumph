@@ -27,7 +27,7 @@ class TACTICAL_TRIUMPH_API UHeroGameplayAbility : public UGameplayAbility
 
 public:
 	UHeroGameplayAbility();
-	void RemoveCausedEffects() const;
+	void RemoveCausedEffects(AActor* OwnerActor) const;
 
 	virtual void OnRemoveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec) override;
 

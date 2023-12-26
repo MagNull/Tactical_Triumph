@@ -14,7 +14,7 @@ bool FSquadEffect::operator==(const FSquadEffect& other) const
 		other.EffectSpecHandle == EffectSpecHandle;
 }
 
-USquad::USquad()
+USquadComponent::USquadComponent()
 {
 	PrimaryComponentTick.bCanEverTick = false;
 }
@@ -40,6 +40,20 @@ void USquadComponent::BeginDestroy()
 	}
 }
 
+TArray<AHero*> USquadComponent::GetHeroes() const
+{
+	TArray<AHero*> result;
+	for (const auto DropZone : DropZones)
+	{
+		AHero* hero = DropZone->GetHero();
+		if (hero != nullptr)
+		{
+			result.Add(hero);
+		}
+	}
+
+	return result;
+}
 
 TArray<AHero*> USquadComponent::GetHeroesInColumn(ESquadColumn column) const
 {
@@ -47,6 +61,19 @@ TArray<AHero*> USquadComponent::GetHeroesInColumn(ESquadColumn column) const
 	for (const auto DropZone : DropZones)
 	{
 		if (DropZone->Column == column)
+		{
+			ResultArray.Add(DropZone->GetHero());
+		}
+	}
+	return ResultArray;
+}
+
+TArray<AHero*> USquadComponent::GetHeroesInRow(ESquadRow Row) const
+{
+	TArray<AHero*> ResultArray;
+	for (const auto DropZone : DropZones)
+	{
+		if (DropZone->Row == Row)
 		{
 			ResultArray.Add(DropZone->GetHero());
 		}
@@ -145,19 +172,6 @@ ESquadColumn USquadComponent::GetColumn(AHero* Hero) const
 	return {};
 }
 
-TArray<AHero*> USquadComponent::GetHeroesInRow(ESquadRow Row) const
-{
-	TArray<AHero*> ResultArray;
-	for (const auto DropZone : DropZones)
-	{
-		if (DropZone->Row == Row)
-		{
-			ResultArray.Add(DropZone->GetHero());
-		}
-	}
-	return ResultArray;
-}
-
 AHero* USquadComponent::GetLeader()
 {
 	if (Leader == nullptr)
@@ -191,7 +205,7 @@ ADropZone* USquadComponent::GetCenterDropZone()
 	return GetDropZone(ESquadRow::Flank, ESquadColumn::Mid);
 }
 
-void USquadComponent::AddSquadEffect(TSubclassOf<UGameplayEffect> Effect)
+void USquadComponent::AddSquadEffect(FSquadEffect SquadEffect)
 {
 	SquadEffects.Add(SquadEffect);
 	for (const auto DropZone : DropZones)
@@ -206,17 +220,26 @@ void USquadComponent::AddSquadEffect(TSubclassOf<UGameplayEffect> Effect)
 	}
 }
 
+//TODO: Test
 void USquadComponent::RemoveSquadEffect(TSubclassOf<UGameplayAbility> SourceAbility)
 {
-	TArray<UClass*> ToRemove;
+	TArray<const UGameplayEffect*> ToRemove;
 	for (auto SquadEffect : SquadEffects)
 	{
 		if (SquadEffect.SourceAbility == SourceAbility)
 		{
-			ToRemove.Add(SquadEffect.EffectSpecHandle.Data.Get()->Def.GetClass());
+			ToRemove.Add(SquadEffect.EffectSpecHandle.Data->Def.Get());
 			SquadEffects.Remove(SquadEffect);
 		}
 	}
+
+	if (ToRemove.Num() <= 0)
+		return;
+
+	SquadEffects.RemoveAll([&ToRemove](const FSquadEffect& SquadEffect)
+	{
+		return ToRemove.Contains(SquadEffect.EffectSpecHandle.Data->Def.Get());
+	});
 
 	for (const auto DropZone : DropZones)
 	{
@@ -225,12 +248,12 @@ void USquadComponent::RemoveSquadEffect(TSubclassOf<UGameplayAbility> SourceAbil
 			continue;
 		UAbilitySystemComponent* ASC = Hero->GetAbilitySystemComponent();
 		TArray<FActiveGameplayEffectHandle> ActiveGameplayEffectHandles = ASC->GetActiveEffects({});
-		for (const auto RemoveEffectClass : ToRemove)
+		for (const auto RemoveEffectDef : ToRemove)
 		{
 			for (const auto EffectHandle : ActiveGameplayEffectHandles)
 			{
-				const UClass* EffectClass = ASC->GetActiveGameplayEffect(EffectHandle)->Spec.Def.GetClass();
-				if(EffectClass == RemoveEffectClass)
+				const UGameplayEffect* EffectDef = ASC->GetActiveGameplayEffect(EffectHandle)->Spec.Def;
+				if (EffectDef == RemoveEffectDef)
 				{
 					ASC->RemoveActiveGameplayEffect(EffectHandle);
 				}
@@ -263,21 +286,29 @@ void USquadComponent::AddSquadAbility(FSquadAbility SquadAbility, bool activate)
 
 void USquadComponent::RemoveSquadAbility(TSubclassOf<UGameplayAbility> SourceAbility)
 {
-	TArray<UClass*> ToRemove;
+	TArray<TSubclassOf<UGameplayAbility>> ToRemove;
 	for (auto SquadAbility : SquadAbilities)
 	{
 		if (SquadAbility.SourceAbility == SourceAbility)
 		{
-			ToRemove.Add(SquadAbility.Ability->GetClass());
-			SquadAbilities.Remove(SquadAbility);
+			ToRemove.Add(SquadAbility.Ability);
 		}
 	}
-	
+
+	if (ToRemove.Num() <= 0)
+		return;
+
+	SquadAbilities.RemoveAll([&ToRemove](const FSquadAbility SquadAbility)
+	{
+		return ToRemove.Contains(SquadAbility.Ability);
+	});
+
 	for (const auto DropZone : DropZones)
 	{
 		const AHero* Hero = DropZone->GetHero();
 		if (!Hero)
 			continue;
+
 		UAbilitySystemComponent* ASC = Hero->GetAbilitySystemComponent();
 		TArray<FGameplayAbilitySpec> Abilities = ASC->GetActivatableAbilities();
 		for (auto RemoveAbilityClass : ToRemove)

@@ -1,31 +1,31 @@
 ﻿#include "Tactical_Triumph/Public/AbilitySystem/HeroGameplayAbility.h"
 
+#include "BattleState.h"
 #include "AbilitySystem/Hero.h"
 #include "AbilitySystem/HeroAbilitySystemComponent.h"
 #include "Kismet/GameplayStatics.h"
-#include "Squad/Squad.h"
-
-class USquad;
+#include "Pawn/PlayerPawn.h"
+#include "Squad/SquadComponent.h"
 
 UHeroGameplayAbility::UHeroGameplayAbility()
 {
 }
 
-void UHeroGameplayAbility::RemoveCausedEffects() const
+void UHeroGameplayAbility::RemoveCausedEffects(AActor* OwnerActor) const
 {
 	TArray<AActor*> AllHeroes;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AHero::StaticClass(), AllHeroes);
+	UGameplayStatics::GetAllActorsOfClass(OwnerActor->GetWorld(), AHero::StaticClass(), AllHeroes);
 	for (const auto Actor : AllHeroes)
 	{
 		const AHero* Hero = Cast<AHero>(Actor);
 		if (!Hero)
 			continue;
-		UHeroAbilitySystemComponent* ASC = Cast<UHeroAbilitySystemComponent>(Hero->GetAbilitySystemComponent());
-
-		TArray<FActiveGameplayEffectHandle> EffectsToRemove = ASC->GetActiveGameplayEffectsByAbility(this);
+		UHeroAbilitySystemComponent* HeroASC = Cast<UHeroAbilitySystemComponent>(Hero->GetAbilitySystemComponent());
+	
+		TArray<FActiveGameplayEffectHandle> EffectsToRemove = HeroASC->GetActiveGameplayEffectsByAbility(this);
 		for (const auto ToRemove : EffectsToRemove)
 		{
-			ASC->RemoveActiveGameplayEffect(ToRemove);
+			HeroASC->RemoveActiveGameplayEffect(ToRemove);
 		}
 	}
 }
@@ -33,21 +33,15 @@ void UHeroGameplayAbility::RemoveCausedEffects() const
 void UHeroGameplayAbility::OnRemoveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
 {
 	OnAbilityRemoved();
-	RemoveCausedEffects();
-	// auto pp = UGameplayStatics::GetPlayerPawn(ActorInfo->OwnerActor->GetWorld(), 0);
-	// if()
-	// {
-	// 	UE_LOG(LogTemp, Display, TEXT("World null"));
-	// 	return;
-	// }
-	// USquad* Squad = UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->GetComponentByClass<USquad>();
-	// if(Squad == nullptr)
-	// {
-	// 	UE_LOG(LogTemp, Display, TEXT("Squad null"));
-	// 	return;
-	// }
-	// Squad->RemoveSquadAbility(GetClass());
-	// Squad->RemoveSquadEffect(GetClass());
+	RemoveCausedEffects(ActorInfo->OwnerActor.Get());
+	USquadComponent* Squad = UBattleState::GetActivePlayer()->GetComponentByClass<USquadComponent>();
+	if(Squad == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("%s get Squad is null"), *GetName());
+		return;
+	}
+	Squad->RemoveSquadAbility(GetClass());
+	Squad->RemoveSquadEffect(GetClass());
 }
 
 FSquadAbility UHeroGameplayAbility::GetSquadAbility(TSubclassOf<UGameplayAbility> Ability) const
