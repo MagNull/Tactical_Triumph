@@ -200,6 +200,18 @@ ADropZone* USquadComponent::GetDropZone(ESquadRow row, ESquadColumn column) cons
 	return nullptr;
 }
 
+AHero* USquadComponent::FirstHeroInArray(TArray<AHero*> Heroes)
+{
+	for(const auto Hero : Heroes)
+	{
+		if(Hero != nullptr)
+		{
+			return Hero;
+		}
+	}
+	return nullptr;
+}
+
 ADropZone* USquadComponent::GetCenterDropZone()
 {
 	return GetDropZone(ESquadRow::Flank, ESquadColumn::Mid);
@@ -325,13 +337,18 @@ void USquadComponent::RemoveSquadAbility(TSubclassOf<UGameplayAbility> SourceAbi
 TArray<AHero*> USquadComponent::GetFirstPersonsInColumns()
 {
 	TArray<AHero*> Result;
-	
-	auto top_line = GetHeroesInColumn(ESquadColumn::Top);
-	auto middle_line = GetHeroesInColumn(ESquadColumn::Top);
-	auto bottom_line = GetHeroesInColumn(ESquadColumn::Top);
 
-	Result.Add()
+	const auto TopLine = GetHeroesInColumn(ESquadColumn::Top);
+	const auto MiddleLine = GetHeroesInColumn(ESquadColumn::Mid);
+	const auto BottomLine = GetHeroesInColumn(ESquadColumn::Bottom);
+
+	Result.Add(FirstHeroInArray(TopLine));
+	Result.Add(FirstHeroInArray(MiddleLine));
+	Result.Add(FirstHeroInArray(BottomLine));
+	
+	return Result;
 }
+
 
 void USquadComponent::OnSetHero(AHero* NewHero)
 {
