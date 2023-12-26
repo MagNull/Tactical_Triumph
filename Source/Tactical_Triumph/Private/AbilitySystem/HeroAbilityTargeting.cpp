@@ -2,7 +2,7 @@
 
 #include "AbilitySystem/Hero.h"
 #include "Kismet/GameplayStatics.h"
-#include "Squad/Squad.h"
+#include "Squad/SquadComponent.h"
 
 
 FHitResult AHeroAbilityTargeting::PerformTrace(AActor* InSourceActor)
@@ -72,7 +72,7 @@ FGameplayAbilityTargetDataHandle AHeroAbilityTargeting::MakeTargetData(const FHi
 		}
 	case ESelectionType::Column:
 		{
-			const USquad* Squad = UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->GetComponentByClass<USquad>();
+			const USquadComponent* Squad = UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->GetComponentByClass<USquadComponent>();
 			const ESquadColumn TargetColumn = Squad->GetColumn(TargetHero);
 			for (const auto Hero : Squad->GetHeroesInColumn(TargetColumn))
 			{
@@ -82,7 +82,7 @@ FGameplayAbilityTargetDataHandle AHeroAbilityTargeting::MakeTargetData(const FHi
 		}
 	case ESelectionType::Row:
 		{
-			const USquad* Squad = UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->GetComponentByClass<USquad>();
+			const USquadComponent* Squad = UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->GetComponentByClass<USquadComponent>();
 			const ESquadRow TargetRow = Squad->GetRow(TargetHero);
 			for (const auto Hero : Squad->GetHeroesInRow(TargetRow))
 			{

@@ -29,3 +29,8 @@ bool ADropZone::IsCenter()
 {
 	return Column == ESquadColumn::Mid && Row == ESquadRow::Flank;
 }
+
+APlayerPawn* ADropZone::GetPlayerOwner()
+{
+	return PlayerOwnerPawn;
+}

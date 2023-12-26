@@ -17,8 +17,20 @@ class TACTICAL_TRIUMPH_API ADropZone : public AActor
 public:
 	ADropZone();
 
-protected:
-	AHero* Hero;
+	UFUNCTION(BlueprintCallable)
+	bool GetIsOccupied() const;
+
+	UFUNCTION(BlueprintCallable)
+	AHero* GetHero() const;
+
+	UFUNCTION(BlueprintCallable)
+	virtual void SetHero(AHero* NewHero);
+
+	UFUNCTION(BlueprintCallable)
+	bool IsCenter();
+
+	UFUNCTION(BlueprintCallable)
+	class APlayerPawn* GetPlayerOwner();
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
@@ -27,20 +39,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	ESquadRow Row;
 
+	FOnSetHero OnSetHero;
+
+private:
 	UPROPERTY(EditAnywhere)
 	class APlayerPawn* PlayerOwnerPawn;
 
-	UFUNCTION(BlueprintCallable)
-	bool GetIsOccupied() const;
-
-	UFUNCTION(BlueprintCallable)
-	AHero* GetHero() const;
-
-	FOnSetHero OnSetHero;
-
-	UFUNCTION(BlueprintCallable)
-	virtual void SetHero(AHero* NewHero);
-
-	UFUNCTION(BlueprintCallable)
-	bool IsCenter();
+	AHero* Hero = nullptr;
 };

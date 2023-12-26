@@ -1,11 +1,12 @@
 #pragma once
+
 #include "CoreMinimal.h"
 #include "DragAndDrop/DropZone.h"
 #include "Templates/Tuple.h"
 #include "AbilitySystem/Hero.h"
 #include "AbilitySystem/SquadLines.h"
 #include "Components/ActorComponent.h"
-#include "Squad.generated.h"
+#include "SquadComponent.generated.h"
 
 USTRUCT(BlueprintType)
 struct FSquadAbility
@@ -30,12 +31,12 @@ struct FSquadEffect
 };
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
-class TACTICAL_TRIUMPH_API USquad : public UActorComponent
+class TACTICAL_TRIUMPH_API USquadComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:
-	USquad();
+	USquadComponent();
 
 	virtual void BeginPlay() override;
 	virtual void BeginDestroy() override;
@@ -65,12 +66,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual AHero* GetLeader();
 
-	AHero* GetHero(ESquadRow Row, ESquadColumn Column) const;
-
 	UFUNCTION(BlueprintCallable)
 	virtual UObject* GetPlayerOwner() const;
 
-	ADropZone* GetDropZone(ESquadRow row, ESquadColumn column) const;
 	UFUNCTION(BlueprintCallable)
 	ADropZone* GetCenterDropZone();
 
@@ -81,8 +79,13 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void AddSquadAbility(FSquadAbility SquadAbility, bool activate);
 	void RemoveSquadAbility(TSubclassOf<UGameplayAbility> SourceAbility);
-
+    
+protected:
+	AHero* GetHero(ESquadRow Row, ESquadColumn Column) const;
+    
 	void OnSetHero(AHero* NewHero);
+    
+	ADropZone* GetDropZone(ESquadRow row, ESquadColumn column) const;
 
 private:
 	UPROPERTY(EditAnywhere)
