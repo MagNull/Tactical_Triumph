@@ -7,7 +7,7 @@ ADropZone::ADropZone()
 
 bool ADropZone::GetIsOccupied() const
 {
- 	return Hero != nullptr;
+	return Hero != nullptr;
 }
 
 AHero* ADropZone::GetHero() const
@@ -17,9 +17,9 @@ AHero* ADropZone::GetHero() const
 
 void ADropZone::SetHero(AHero* NewHero)
 {
-	if(NewHero == nullptr)
+	if (NewHero == nullptr)
 		return;
-	
+
 	Hero = NewHero;
 
 	OnSetHero.Broadcast(NewHero);
@@ -33,4 +33,9 @@ bool ADropZone::IsCenter()
 APlayerPawn* ADropZone::GetPlayerOwner()
 {
 	return PlayerOwnerPawn;
+}
+
+void ADropZone::Clear()
+{
+	Hero = nullptr;
 }

@@ -32,6 +32,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	class APlayerPawn* GetPlayerOwner();
 
+	void Clear();
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	ESquadColumn Column;
