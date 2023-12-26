@@ -25,6 +25,7 @@ void USquadComponent::BeginPlay()
 
 	for (auto DropZone : DropZones)
 	{
+		DropZone->Clear();
 		OnSetHeroHandle = DropZone->OnSetHero.AddUObject(
 			this, &USquadComponent::OnSetHero);
 	}
@@ -342,9 +343,13 @@ TArray<AHero*> USquadComponent::GetFirstHeroesInColumns()
 	const auto MiddleLine = GetHeroesInColumn(ESquadColumn::Mid);
 	const auto BottomLine = GetHeroesInColumn(ESquadColumn::Bottom);
 
-	Result.Add(FirstHeroInArray(TopLine));
-	Result.Add(FirstHeroInArray(MiddleLine));
-	Result.Add(FirstHeroInArray(BottomLine));
+	AHero* Hero = nullptr;
+	if(Hero = FirstHeroInArray(TopLine); Hero != nullptr)
+		Result.Add(Hero);
+	if(Hero = FirstHeroInArray(MiddleLine); Hero != nullptr)
+		Result.Add(Hero);
+	if(Hero = FirstHeroInArray(BottomLine); Hero != nullptr)
+		Result.Add(Hero);
 	
 	return Result;
 }
