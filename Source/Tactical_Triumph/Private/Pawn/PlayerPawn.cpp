@@ -8,7 +8,7 @@
 
 APlayerPawn::APlayerPawn()
 {
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 	AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("Ability System Component"));
 	AbilitySystemComponent->SetIsReplicated(true);
 
