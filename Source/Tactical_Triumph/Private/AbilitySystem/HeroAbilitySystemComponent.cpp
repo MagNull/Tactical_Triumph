@@ -62,14 +62,14 @@ void UHeroAbilitySystemComponent::OnEffectApplied(UAbilitySystemComponent* ASC, 
 
 		if (ASC->HasAnyMatchingGameplayTags(TagAbilityPair.Key.GetSingleTagContainer()))
 		{
-			if (Ability->AbilityTags.HasAny(NotActivableAbilityTags))
-			{
-				GiveAbility(Ability);
-			}
-			else
+			if (Ability->AbilityTags.HasAny(ActivableAbilityTags))
 			{
 				FGameplayAbilitySpecHandle AbilitySpec = GiveAbility(Ability);
 				TryActivateAbility(AbilitySpec);
+			}
+			else
+			{
+				GiveAbility(Ability);
 			}
 		}
 	}

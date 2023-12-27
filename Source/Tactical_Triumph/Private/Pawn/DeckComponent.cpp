@@ -1,6 +1,6 @@
 #include "Pawn/DeckComponent.h"
+
 #include "CardLibrary.h"
-#include "AbilitySystem/HeroData.h"
 
 UDeckComponent::UDeckComponent()
 {

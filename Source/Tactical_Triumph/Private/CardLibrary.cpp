@@ -20,6 +20,8 @@ TArray<UHeroData*> ACardLibrary::LoadCards()
 	TArray<UHeroData*> Cards;
 	CardLibrary->GetObjects(Cards);
 	UE_LOG(LogTemp, Warning, TEXT("Card size: %d"), Cards.Num());
+	UE_LOG(LogTemp, Display, TEXT("Card size: %d"), Cards.Num());
+	UE_LOG(LogTemp, Display, TEXT("Cards %d"), Cards.Num());
 
 	return Cards;
 }

@@ -65,6 +65,9 @@ void UHeroAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 
 	if (Data.EvaluatedData.Attribute == GetPresentDamageAttribute())
 	{
+		const float NewPresentDamage = FMath::Clamp(GetPresentDamage(), 0, 1000);
+		DeltaValue = GetPresentDamage() - NewPresentDamage;
+		SetPresentDamage(NewPresentDamage);
 		if (Target)
 		{
 			Target->HandleDamageChanged(DeltaValue, TagContainer, Instigator, Target->GetAbilitySystemComponent());
@@ -73,6 +76,9 @@ void UHeroAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 
 	if (Data.EvaluatedData.Attribute == GetAttackAttribute())
 	{
+		const float NewAttack = FMath::Clamp(GetAttack(), 0, 1000);
+		DeltaValue = GetAttack() - NewAttack;
+		SetAttack(NewAttack);
 		if (Target)
 		{
 			Target->HandleAttackChanged(DeltaValue, TagContainer);
