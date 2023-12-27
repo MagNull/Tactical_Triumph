@@ -24,7 +24,7 @@ public:
 	int GetColumnInt() const;
 	
 	UFUNCTION(BlueprintCallable)
-	bool GetIsOccupied() const;
+	bool IsOccupied() const;
 
 	UFUNCTION(BlueprintCallable)
 	AHero* GetHero() const;

@@ -15,7 +15,7 @@ int ADropZone::GetColumnInt() const
 	return static_cast<int>(Column);
 }
 
-bool ADropZone::GetIsOccupied() const
+bool ADropZone::IsOccupied() const
 {
 	return Hero != nullptr;
 }
