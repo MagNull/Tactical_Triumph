@@ -21,7 +21,7 @@ void UHeroGameplayAbility::RemoveCausedEffects(AActor* OwnerActor) const
 		if (!Hero)
 			continue;
 		UHeroAbilitySystemComponent* HeroASC = Cast<UHeroAbilitySystemComponent>(Hero->GetAbilitySystemComponent());
-	
+
 		TArray<FActiveGameplayEffectHandle> EffectsToRemove = HeroASC->GetActiveGameplayEffectsByAbility(this);
 		for (const auto ToRemove : EffectsToRemove)
 		{
@@ -30,18 +30,27 @@ void UHeroGameplayAbility::RemoveCausedEffects(AActor* OwnerActor) const
 	}
 }
 
+bool UHeroGameplayAbility::CheckCost(const FGameplayAbilitySpecHandle Handle,
+                                     const FGameplayAbilityActorInfo* ActorInfo,
+                                     FGameplayTagContainer* OptionalRelevantTags) const
+{
+	const FGameplayAbilityActorInfo* PlayerActorInfo = UBattleState::GetActivePlayer()->GetAbilitySystemComponent()->
+	                                                                                    AbilityActorInfo.Get();
+	return Super::CheckCost(Handle, PlayerActorInfo, OptionalRelevantTags);
+}
+
 void UHeroGameplayAbility::OnRemoveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
 {
 	OnAbilityRemoved();
 	RemoveCausedEffects(ActorInfo->OwnerActor.Get());
-	 USquadComponent* Squad = UBattleState::GetActivePlayer()->GetComponentByClass<USquadComponent>();
-	 if(Squad == nullptr)
-	 {
-	 	UE_LOG(LogTemp, Warning, TEXT("%s get Squad is null"), *GetName());
-	 	return;
-	 }
-	 Squad->RemoveSquadAbility(GetClass());
-	 Squad->RemoveSquadEffect(GetClass());
+	USquadComponent* Squad = UBattleState::GetActivePlayer()->GetComponentByClass<USquadComponent>();
+	if (Squad == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("%s get Squad is null"), *GetName());
+		return;
+	}
+	Squad->RemoveSquadAbility(GetClass());
+	Squad->RemoveSquadEffect(GetClass());
 }
 
 FSquadAbility UHeroGameplayAbility::GetSquadAbility(TSubclassOf<UGameplayAbility> Ability) const

@@ -28,16 +28,18 @@ class TACTICAL_TRIUMPH_API UHeroGameplayAbility : public UGameplayAbility
 public:
 	UHeroGameplayAbility();
 	void RemoveCausedEffects(AActor* OwnerActor) const;
+	virtual bool CheckCost(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
+	                       FGameplayTagContainer* OptionalRelevantTags) const override;
 
 	virtual void OnRemoveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec) override;
 
 protected:
 	UFUNCTION(BlueprintCallable)
 	FSquadAbility GetSquadAbility(TSubclassOf<UGameplayAbility> Ability) const;
-	
+
 	UFUNCTION(BlueprintCallable)
 	FSquadEffect GetSquadEffect(FGameplayEffectSpecHandle SpecHandle) const;
-	
+
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnAbilityRemoved();
 };
