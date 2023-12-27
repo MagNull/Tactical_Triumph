@@ -7,13 +7,6 @@
 #include "UObject/NoExportTypes.h"
 #include "BattleState.generated.h"
 
-UENUM(BlueprintType)
-enum class EBattleState
-{
-	FirstPlayerTurn = 0,
-	SecondPlayerTurn = 1
-};
-
 UCLASS()
 class UBattleState : public UObject
 {
@@ -23,11 +16,14 @@ public:
 	UFUNCTION(BlueprintCallable)
 	static void Reset();
 	
+	UFUNCTION(BlueprintCallable)
+	static void ResetWithoutPlayers();
+	
 	UFUNCTION(BlueprintCallable, meta = (WorldContext="WorldContextObject"))
 	static void InitializePlayers(class APlayerPawn* FirstPlayerPawn, class APlayerPawn* SecondPlayerPawn);
 
 	UFUNCTION(BlueprintCallable)
-	static void ChangePlayerTurn();
+	static void ChangeStartPlayerIndex();
 
 	UFUNCTION(BlueprintCallable)
 	static void ChangeActivePlayer();
@@ -42,27 +38,42 @@ public:
 	static class APlayerPawn* GetNotActivePlayer();
 
 	UFUNCTION(BlueprintCallable)
-	static class APlayerPawn* GetPlayerPawn(const int PlayerIndex);
-
-	static EBattleState GetPlayerTurn();
+	static class APlayerPawn* GetAttackPlayer();
 
 	UFUNCTION(BlueprintCallable)
-	static int GetPlayerTurnInt();
+	static class APlayerPawn* GetDefensePlayer();
+
+	UFUNCTION(BlueprintCallable)
+	static int GetStartPlayerIndex();
+
+	UFUNCTION(BlueprintCallable)
+	static int GetActivePlayerIndex();
+
+	UFUNCTION(BlueprintCallable)
+	static class APlayerPawn* GetPlayerPawn(const int PlayerIndex);
 
 	static ESquadRow GetLineTurn();
 
 	UFUNCTION(BlueprintCallable)
 	static int GetLineTurnInt();
 
+	UFUNCTION(BlueprintCallable)
+	static void AddTurnCount();
+	
+	UFUNCTION(BlueprintCallable)
+	static int GetTurnCount();
+
 private:
 	static void AddPlayer(APlayerPawn* Player);
 
 private:
 	static inline TArray<class APlayerPawn*> Players = {};
-
-	static inline EBattleState PlayerTurn = EBattleState::FirstPlayerTurn;
+	
+	static inline int StartPlayerIndex = 0;
 
 	static inline ESquadRow LineTurn = ESquadRow::Vanguard;
 
 	static inline bool IsFirstPlayerActive = true;
+
+	static inline int TurnCount = 1;
 };

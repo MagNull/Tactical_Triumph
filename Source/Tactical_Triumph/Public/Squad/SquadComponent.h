@@ -23,7 +23,7 @@ USTRUCT(BlueprintType)
 struct FSquadEffect
 {
 	GENERATED_BODY()
-	
+
 	FGameplayEffectSpecHandle EffectSpecHandle;
 	TSubclassOf<UGameplayAbility> SourceAbility;
 
@@ -73,19 +73,25 @@ public:
 	ADropZone* GetCenterDropZone();
 
 	UFUNCTION(BlueprintCallable)
-	void AddSquadEffect(FSquadEffect SquadEffect);
-	void RemoveSquadEffect(TSubclassOf<UGameplayAbility> SourceAbility);
+	TArray<AHero*> GetFirstHeroesInColumns();
 
 	UFUNCTION(BlueprintCallable)
 	void AddSquadAbility(FSquadAbility SquadAbility, bool activate);
 	void RemoveSquadAbility(TSubclassOf<UGameplayAbility> SourceAbility);
-    
+	
+	UFUNCTION(BlueprintCallable)
+	void AddSquadEffect(FSquadEffect SquadEffect);
+	void RemoveSquadEffect(TSubclassOf<UGameplayAbility> SourceAbility);
+
 protected:
 	AHero* GetHero(ESquadRow Row, ESquadColumn Column) const;
-    
+
 	void OnSetHero(AHero* NewHero);
-    
+
 	ADropZone* GetDropZone(ESquadRow row, ESquadColumn column) const;
+
+private:
+	AHero* FirstHeroInArray(TArray<AHero*> Heroes);
 
 private:
 	UPROPERTY(EditAnywhere)
