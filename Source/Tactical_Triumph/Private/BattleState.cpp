@@ -44,9 +44,11 @@ void UBattleState::ChangeLineTurn()
 
 APlayerPawn* UBattleState::GetActivePlayer()
 {
-	UE_LOG(LogTemp, Display, TEXT("Players Num: %d"), Players.Num());
 	if (Players.IsEmpty() || Players.Num() < 2)
+	{
+		UE_LOG(LogTemp, Error, TEXT("There is not any players!"));
 		return nullptr;
+	}
 	return IsFirstPlayerActive ? Players[0] : Players[1];
 }
 
