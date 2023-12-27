@@ -23,7 +23,6 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	TArray<class UHeroData*> GetCards();
-
 private:
 	UPROPERTY(EditAnywhere)
 	TArray<class UHeroData*> Cards;

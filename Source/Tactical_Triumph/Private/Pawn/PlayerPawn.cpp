@@ -3,6 +3,7 @@
 #include "AbilitySystemGlobals.h"
 #include "AbilitySystem/PlayerAttributeSet.h"
 #include "Kismet/GameplayStatics.h"
+#include "Pawn/DeckComponent.h"
 #include "Squad/SquadComponent.h"
 
 APlayerPawn::APlayerPawn()
@@ -12,10 +13,12 @@ APlayerPawn::APlayerPawn()
 	AbilitySystemComponent->SetIsReplicated(true);
 
 	Attributes = CreateDefaultSubobject<UPlayerAttributeSet>(TEXT("Attributes"));
+	Deck = CreateDefaultSubobject<UDeckComponent>(TEXT("Deck"));
 }
 
 void APlayerPawn::BeginPlay()
 {
+	Super::BeginPlay();
 	UAbilitySystemGlobals::Get().InitGlobalData();
     	UGameplayStatics::GetPlayerController(GetWorld(), 0)->SetShowMouseCursor(true);
 }

@@ -1,12 +1,15 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Engine/ObjectLibrary.h"
+#include "Components/ActorComponent.h"
 #include "DeckComponent.generated.h"
+
 
 class ACardLibrary;
 
-UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
+UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class TACTICAL_TRIUMPH_API UDeckComponent : public UActorComponent
 {
 	GENERATED_BODY()

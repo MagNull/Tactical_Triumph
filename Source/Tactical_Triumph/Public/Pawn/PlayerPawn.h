@@ -8,6 +8,7 @@
 #include "GameFramework/Pawn.h"
 #include "PlayerPawn.generated.h"
 
+class UDeckComponent;
 class UPlayerAttributeSet;
 class UDA_Card;
 class UAbilitySystemComponent;
@@ -42,4 +43,6 @@ protected:
 	UAbilitySystemComponent* AbilitySystemComponent;
 	UPROPERTY(EditAnywhere, Category = "Attributes")
 	TObjectPtr<UPlayerAttributeSet> Attributes;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UDeckComponent* Deck;
 };
