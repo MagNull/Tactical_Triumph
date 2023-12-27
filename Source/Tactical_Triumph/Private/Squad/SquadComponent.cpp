@@ -203,9 +203,9 @@ ADropZone* USquadComponent::GetDropZone(ESquadRow row, ESquadColumn column) cons
 
 AHero* USquadComponent::FirstHeroInArray(TArray<AHero*> Heroes)
 {
-	for(const auto Hero : Heroes)
+	for (const auto Hero : Heroes)
 	{
-		if(Hero != nullptr)
+		if (Hero != nullptr)
 		{
 			return Hero;
 		}
@@ -344,14 +344,27 @@ TArray<AHero*> USquadComponent::GetFirstHeroesInColumns()
 	const auto BottomLine = GetHeroesInColumn(ESquadColumn::Bottom);
 
 	AHero* Hero = nullptr;
-	if(Hero = FirstHeroInArray(TopLine); Hero != nullptr)
+	if (Hero = FirstHeroInArray(TopLine); Hero != nullptr)
 		Result.Add(Hero);
-	if(Hero = FirstHeroInArray(MiddleLine); Hero != nullptr)
+	if (Hero = FirstHeroInArray(MiddleLine); Hero != nullptr)
 		Result.Add(Hero);
-	if(Hero = FirstHeroInArray(BottomLine); Hero != nullptr)
+	if (Hero = FirstHeroInArray(BottomLine); Hero != nullptr)
 		Result.Add(Hero);
-	
+
 	return Result;
+}
+
+ADropZone* USquadComponent::GetDropZoneByHero(AHero* Hero)
+{
+	for (const auto DropZone : DropZones)
+	{
+		if (const auto TempHero = DropZone->GetHero(); TempHero != nullptr && TempHero == Hero)
+		{
+			return DropZone;
+		}
+	}
+
+	return nullptr;
 }
 
 
