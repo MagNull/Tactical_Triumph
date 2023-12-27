@@ -10,7 +10,7 @@
 void UPlayerAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-	
+
 	DOREPLIFETIME_CONDITION_NOTIFY(UPlayerAttributeSet, ActionPoints, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UPlayerAttributeSet, ActionPointsRestoration, COND_None, REPNOTIFY_Always);
 }
@@ -18,14 +18,13 @@ void UPlayerAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& 
 void UPlayerAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
 {
 	Super::PostGameplayEffectExecute(Data);
-
 	if (Data.EvaluatedData.Attribute == GetActionPointsAttribute())
 	{
 		const float ClampedActionPointsCount = FMath::Clamp(GetActionPoints(), 0, 1000);
 		SetActionPoints(ClampedActionPointsCount);
-		
+	
 		APlayerPawn* PlayerPawn = Cast<APlayerPawn>(GetOwningAbilitySystemComponent()->GetOwner());
-		if(PlayerPawn)
+		if (PlayerPawn)
 		{
 			PlayerPawn->HandleActionPointsChanged();
 		}
