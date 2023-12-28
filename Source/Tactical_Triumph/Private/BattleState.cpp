@@ -86,6 +86,7 @@ APlayerPawn* UBattleState::GetPlayerPawn(const int PlayerIndex)
 
 ESquadRow UBattleState::GetLineTurn()
 {
+	UE_LOG(LogTemp, Display, TEXT("Line turn - %p"), GetLineTurnInt);
 	return LineTurn;
 }
 
