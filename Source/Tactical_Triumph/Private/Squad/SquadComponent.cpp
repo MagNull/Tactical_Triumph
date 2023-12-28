@@ -378,6 +378,19 @@ TArray<AHero*> USquadComponent::GetFirstHeroesInColumns()
 	return Result;
 }
 
+ADropZone* USquadComponent::GetDropZoneByHero(AHero* Hero)
+{
+	for (const auto DropZone : DropZones)
+	{
+		if (const auto TempHero = DropZone->GetHero(); TempHero != nullptr && TempHero == Hero)
+		{
+			return DropZone;
+		}
+	}
+
+	return nullptr;
+}
+
 
 void USquadComponent::OnSetHero(AHero* NewHero)
 {

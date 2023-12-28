@@ -79,6 +79,9 @@ public:
 	TArray<AHero*> GetFirstHeroesInColumns();
 
 	UFUNCTION(BlueprintCallable)
+	ADropZone* GetDropZoneByHero(AHero* Hero);
+
+	UFUNCTION(BlueprintCallable)
 	void AddSquadAbility(FSquadAbility SquadAbility, bool activate);
 	void RemoveSquadAbility(TSubclassOf<UGameplayAbility> SourceAbility);
 	
