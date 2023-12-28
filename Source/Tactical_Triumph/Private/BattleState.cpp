@@ -39,7 +39,8 @@ void UBattleState::ChangeActivePlayer()
 
 void UBattleState::ChangeLineTurn()
 {
-	LineTurn = static_cast<ESquadRow>((static_cast<int>(LineTurn) + 1) % sizeof(ESquadRow));
+	LineTurn = static_cast<ESquadRow>((static_cast<int>(LineTurn) + 1) % 3);
+	UE_LOG(LogTemp, Display, TEXT("LineTurn: %d"), static_cast<int>(LineTurn));
 }
 
 APlayerPawn* UBattleState::GetActivePlayer()
