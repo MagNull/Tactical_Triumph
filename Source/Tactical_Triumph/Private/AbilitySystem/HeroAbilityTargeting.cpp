@@ -57,22 +57,23 @@ void AHeroAbilityTargeting::CancelTargeting()
 FGameplayAbilityTargetDataHandle AHeroAbilityTargeting::MakeTargetData(const FHitResult& hitResult) const
 {
 	TArray<TWeakObjectPtr<AActor>> TargetActors{};
-	AHero* TargetHero = Cast<AHero>(hitResult.GetActor());
-	if (TargetHero == nullptr)
-	{
-		return StartLocation.MakeTargetDataHandleFromActors(TargetActors, true);
-	}
+	AActor* TargetActor = hitResult.GetActor();
+	AHero* TargetHero = Cast<AHero>(TargetActor);
 
 	switch (SelectionType)
 	{
 	case ESelectionType::Hero:
 		{
-			TargetActors.Add(hitResult.GetActor());
+			if (TargetHero)
+				TargetActors.Add(TargetActor);
 			break;
 		}
 	case ESelectionType::Column:
 		{
-			const USquadComponent* Squad = UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->GetComponentByClass<USquadComponent>();
+			if (!TargetHero)
+				break;
+			const USquadComponent* Squad = UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->GetComponentByClass<
+				USquadComponent>();
 			const ESquadColumn TargetColumn = Squad->GetColumn(TargetHero);
 			for (const auto Hero : Squad->GetHeroesInColumn(TargetColumn))
 			{
@@ -82,7 +83,11 @@ FGameplayAbilityTargetDataHandle AHeroAbilityTargeting::MakeTargetData(const FHi
 		}
 	case ESelectionType::Row:
 		{
-			const USquadComponent* Squad = UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->GetComponentByClass<USquadComponent>();
+			if (!TargetHero)
+				break;
+
+			const USquadComponent* Squad = UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->GetComponentByClass<
+				USquadComponent>();
 			const ESquadRow TargetRow = Squad->GetRow(TargetHero);
 			for (const auto Hero : Squad->GetHeroesInRow(TargetRow))
 			{
@@ -90,8 +95,17 @@ FGameplayAbilityTargetDataHandle AHeroAbilityTargeting::MakeTargetData(const FHi
 			}
 			break;
 		}
+	case ESelectionType::Cell:
+		{
+			ADropZone* Cell = Cast<ADropZone>(TargetActor);
+			UE_LOG(LogTemp, Display, TEXT("Target name %s"), *TargetActor->GetName());
+			if (!Cell)
+				break;
+			TargetActors.Add(Cell);
+		}
 	}
 
 	return StartLocation.MakeTargetDataHandleFromActors(TargetActors,
-	                                                    SelectionType == ESelectionType::Hero);
+	                                                    SelectionType == ESelectionType::Hero ||
+	                                                    SelectionType == ESelectionType::Cell);
 }

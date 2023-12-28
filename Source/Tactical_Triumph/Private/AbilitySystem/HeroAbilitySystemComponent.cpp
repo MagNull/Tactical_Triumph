@@ -39,9 +39,7 @@ TArray<FActiveGameplayEffectHandle> UHeroAbilitySystemComponent::GetActiveGamepl
 void UHeroAbilitySystemComponent::OnEffectApplied(UAbilitySystemComponent* ASC, const FGameplayEffectSpec& EffectSpec,
                                                   FActiveGameplayEffectHandle ActiveEffectHandle)
 {
-	FGameplayTagContainer GrantedTags;
-	EffectSpec.GetAllGrantedTags(GrantedTags);
-	if (!GrantedTags.HasAnyExact(PositionTags))
+	if (!EffectSpec.DynamicGrantedTags.HasAnyExact(PositionTags))
 		return;
 
 	for (auto TagAbilityPair : TagToAbilityMap)
@@ -49,17 +47,15 @@ void UHeroAbilitySystemComponent::OnEffectApplied(UAbilitySystemComponent* ASC, 
 		UHeroGameplayAbility* Ability = TagAbilityPair.Value.GetDefaultObject();
 
 		//Clear all this ability duplicates
-		TArray<FGameplayAbilitySpecHandle> Abilities;
-		GetAllAbilities(Abilities);
-		for (auto ASH : Abilities)
+		TArray<FGameplayAbilitySpec> Abilities = GetActivatableAbilities();
+		for (auto AbilitySpec : Abilities)
 		{
-			UGameplayAbility* OtherAbility = FindAbilitySpecFromHandle(ASH)->Ability;
-			if (OtherAbility == Ability)
+			if (AbilitySpec.Ability.GetClass() == Ability->GetClass())
 			{
-				ClearAbility(ASH);
+				ClearAbility(AbilitySpec.Handle);
 			}
 		}
-
+		
 		if (ASC->HasAnyMatchingGameplayTags(TagAbilityPair.Key.GetSingleTagContainer()))
 		{
 			if (Ability->AbilityTags.HasAny(ActivableAbilityTags))

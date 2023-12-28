@@ -35,8 +35,6 @@ public:
 	virtual bool CommitAbilityCost(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
 	                               const FGameplayAbilityActivationInfo ActivationInfo,
 	                               FGameplayTagContainer* OptionalRelevantTags) override;
-	virtual void ApplyCost(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo) const override;
-
 protected:
 	UFUNCTION(BlueprintCallable)
 	FSquadAbility GetSquadAbility(TSubclassOf<UGameplayAbility> Ability) const;

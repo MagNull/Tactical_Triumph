@@ -1,8 +1,16 @@
 #include "DragAndDrop/DropZone.h"
 
+#include "AbilitySystemComponent.h"
+#include "AbilitySystem/Hero.h"
+
 ADropZone::ADropZone()
 {
 	PrimaryActorTick.bCanEverTick = true;
+	Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
+	SetRootComponent(RootComponent);
+
+	HeroSpawnPoint = CreateDefaultSubobject<USceneComponent>(TEXT("Hero Spawn Point"));
+	HeroSpawnPoint->AttachToComponent(Root, FAttachmentTransformRules::KeepRelativeTransform);
 }
 
 int ADropZone::GetRowInt() const
@@ -17,12 +25,12 @@ int ADropZone::GetColumnInt() const
 
 bool ADropZone::IsOccupied() const
 {
-	return Hero != nullptr;
+	return CurrentHero != nullptr;
 }
 
 AHero* ADropZone::GetHero() const
 {
-	return Hero;
+	return CurrentHero;
 }
 
 void ADropZone::SetHero(AHero* NewHero)
@@ -30,7 +38,9 @@ void ADropZone::SetHero(AHero* NewHero)
 	if (NewHero == nullptr)
 		return;
 
-	Hero = NewHero;
+	CurrentHero = NewHero;
+	CurrentHero->SetActorLocation(HeroSpawnPoint->GetComponentLocation());
+	ApplyGrantedTag(CurrentHero);
 
 	OnSetHero.Broadcast(NewHero);
 }
@@ -45,7 +55,44 @@ APlayerPawn* ADropZone::GetPlayerOwner()
 	return PlayerOwnerPawn;
 }
 
+void ADropZone::ApplyGrantedTag(AHero* Hero)
+{
+	UAbilitySystemComponent* ASC = Hero->GetAbilitySystemComponent();
+	FGameplayEffectSpecHandle EffectSpecHandle = ASC->MakeOutgoingSpec(InfiniteEffect, 1, ASC->MakeEffectContext());
+	EffectSpecHandle.Data->DynamicGrantedTags.AddTag(GrantedTag);
+	ASC->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data);
+}
+
+void ADropZone::RemoveGrantedTag(AHero* Hero)
+{
+	UE_LOG(LogTemp, Display, TEXT("Start Removing"));
+	if (!Hero)
+	{
+		return;
+	}
+
+	UAbilitySystemComponent* ASC = Hero->GetAbilitySystemComponent();
+	const TArray<FActiveGameplayEffectHandle> EffectsContainer = ASC->GetActiveEffects({});
+	FActiveGameplayEffectHandle TargetEffectHandle;
+	for (auto EffectHandle : EffectsContainer)
+	{
+		const FActiveGameplayEffect* Effect = ASC->GetActiveGameplayEffect(EffectHandle);
+		
+		if (Effect->Spec.DynamicGrantedTags.HasTag(GrantedTag))
+			TargetEffectHandle = EffectHandle;
+	}
+
+	if (!TargetEffectHandle.IsValid())
+	{
+		UE_LOG(LogTemp, Error, TEXT("Hero doesnt have tag effect, granted by this zone"));
+		return;
+	}
+
+	ASC->RemoveActiveGameplayEffect(TargetEffectHandle);
+}
+
 void ADropZone::Clear()
 {
-	Hero = nullptr;
+	RemoveGrantedTag(CurrentHero);
+	CurrentHero = nullptr;
 }
