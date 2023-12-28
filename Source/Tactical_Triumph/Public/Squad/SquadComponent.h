@@ -42,6 +42,9 @@ public:
 	virtual void BeginDestroy() override;
 
 	UFUNCTION(BlueprintCallable)
+	void RemoveHero(AHero* Hero);
+
+	UFUNCTION(BlueprintCallable)
 	virtual bool TryMoveHeroTo(AHero* Hero, ESquadRow row, ESquadColumn column);
 
 	UFUNCTION(BlueprintCallable)

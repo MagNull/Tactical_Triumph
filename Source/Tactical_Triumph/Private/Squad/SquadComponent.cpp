@@ -41,6 +41,14 @@ void USquadComponent::BeginDestroy()
 	}
 }
 
+void USquadComponent::RemoveHero(AHero* Hero)
+{
+	ADropZone* DropZone = GetDropZoneByHero(Hero);
+	DropZone->Clear();
+	Hero->GetAbilitySystemComponent()->ClearAllAbilities();
+	Hero->Destroy();
+}
+
 bool USquadComponent::TryMoveHeroTo(AHero* Hero, ESquadRow row, ESquadColumn column)
 {
 	ADropZone* TargetDropZone = GetDropZone(row, column);

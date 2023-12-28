@@ -47,6 +47,7 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnAttackChanged(float deltaValue, const FGameplayTagContainer& eventTags);
 
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	USkeletalMeshComponent* Mesh;
 
