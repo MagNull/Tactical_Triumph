@@ -2,6 +2,7 @@
 #include "Tactical_Triumph/Public/AbilitySystem/HeroAbilitySystemComponent.h"
 #include "AbilitySystemComponent.h"
 #include "Tactical_Triumph/Public/AbilitySystem/HeroAttributeSet.h"
+#include "Tasks/Task.h"
 
 AHero::AHero()
 {
