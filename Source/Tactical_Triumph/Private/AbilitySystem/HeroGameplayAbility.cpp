@@ -63,14 +63,6 @@ bool UHeroGameplayAbility::CommitAbilityCost(const FGameplayAbilitySpecHandle Ha
 	return Super::CommitAbilityCost(Handle, PlayerActorInfo, ActivationInfo, OptionalRelevantTags);
 }
 
-void UHeroGameplayAbility::ApplyCost(const FGameplayAbilitySpecHandle Handle,
-	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo) const
-{
-	Super::ApplyCost(Handle, ActorInfo, ActivationInfo);
-	UE_LOG(LogTemp, Display, TEXT("Cost Applied to %s"), *ActorInfo->AbilitySystemComponent->GetOwnerActor()->GetName());
-	UE_LOG(LogTemp, Display, TEXT("Action Poinst %d"), Cast<APlayerPawn>(ActorInfo->OwnerActor)->GetActionPoints());
-}
-
 FSquadAbility UHeroGameplayAbility::GetSquadAbility(TSubclassOf<UGameplayAbility> Ability) const
 {
 	return FSquadAbility{Ability, GetClass()};

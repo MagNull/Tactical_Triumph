@@ -1,7 +1,7 @@
 #pragma once
 
 UENUM(BlueprintType)
-enum class ESquadRow
+enum class ESquadRow : uint8
 {
 	Vanguard = 0,
 	Flank = 1,
@@ -9,7 +9,7 @@ enum class ESquadRow
 };
 
 UENUM(BlueprintType)
-enum class ESquadColumn
+enum class ESquadColumn : uint8
 {
 	Top = 0,
 	Mid = 1,

@@ -13,7 +13,8 @@ enum class ESelectionType : uint8
 {
 	Hero,
 	Column,
-	Row
+	Row,
+	Cell
 };
 
 UCLASS()

@@ -41,6 +41,29 @@ void USquadComponent::BeginDestroy()
 	}
 }
 
+bool USquadComponent::TryMoveHeroTo(AHero* Hero, ESquadRow row, ESquadColumn column)
+{
+	ADropZone* TargetDropZone = GetDropZone(row, column);
+	if (TargetDropZone->IsOccupied())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Target drop zone is occupied"));
+		return false;
+	}
+
+	const ESquadColumn HeroColumn = GetColumn(Hero);
+	const ESquadRow HeroRow = GetRow(Hero);
+	ADropZone* OldDropZone = GetDropZone(HeroRow, HeroColumn);
+	if (!OldDropZone->IsOccupied())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Old drop zone is not occupied"));
+		return false;
+	}
+
+	OldDropZone->Clear();
+	TargetDropZone->SetHero(Hero);
+	return true;
+}
+
 TArray<AHero*> USquadComponent::GetHeroes() const
 {
 	TArray<AHero*> result;
@@ -170,6 +193,7 @@ ESquadColumn USquadComponent::GetColumn(AHero* Hero) const
 			return DropZone->Column;
 		}
 	}
+	UE_LOG(LogTemp, Error, TEXT("Hero %s not from current squad"), *Hero->GetName());
 	return {};
 }
 
@@ -203,9 +227,9 @@ ADropZone* USquadComponent::GetDropZone(ESquadRow row, ESquadColumn column) cons
 
 AHero* USquadComponent::FirstHeroInArray(TArray<AHero*> Heroes)
 {
-	for(const auto Hero : Heroes)
+	for (const auto Hero : Heroes)
 	{
-		if(Hero != nullptr)
+		if (Hero != nullptr)
 		{
 			return Hero;
 		}
@@ -344,13 +368,13 @@ TArray<AHero*> USquadComponent::GetFirstHeroesInColumns()
 	const auto BottomLine = GetHeroesInColumn(ESquadColumn::Bottom);
 
 	AHero* Hero = nullptr;
-	if(Hero = FirstHeroInArray(TopLine); Hero != nullptr)
+	if (Hero = FirstHeroInArray(TopLine); Hero != nullptr)
 		Result.Add(Hero);
-	if(Hero = FirstHeroInArray(MiddleLine); Hero != nullptr)
+	if (Hero = FirstHeroInArray(MiddleLine); Hero != nullptr)
 		Result.Add(Hero);
-	if(Hero = FirstHeroInArray(BottomLine); Hero != nullptr)
+	if (Hero = FirstHeroInArray(BottomLine); Hero != nullptr)
 		Result.Add(Hero);
-	
+
 	return Result;
 }
 
