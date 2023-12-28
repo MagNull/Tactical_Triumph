@@ -16,7 +16,7 @@ public:
 	FString GetName() const { return Name; }
 
 	UFUNCTION(BlueprintCallable, Category = "View")
-	UTexture2D GetImage() const {return Image;}
+	UTexture2D* GetImage() const {return Image;}
 
 	UFUNCTION(BlueprintCallable, Category = "Attributes")
 	float GetHealth() const { return Health; }
@@ -64,8 +64,9 @@ public:
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "View")
 	FString Name;
-	UFUNCTION(BlueprintCallable, Category = "View")
-	UTexture2D Image;
+
+	UPROPERTY(EditAnywhere, Category = "View")
+	UTexture2D* Image;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Leader Attributes")
 	float LeaderHealth;
