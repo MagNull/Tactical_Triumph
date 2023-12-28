@@ -62,7 +62,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "View")
 	FString Name;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Leder Attributes")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Leader Attributes")
 	float LeaderHealth;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Leader Attributes")
