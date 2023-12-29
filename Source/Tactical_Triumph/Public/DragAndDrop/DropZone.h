@@ -32,6 +32,9 @@ public:
 	AHero* GetHero() const;
 
 	UFUNCTION(BlueprintCallable)
+	FGameplayTag GetGrantedTag() const {return GrantedTag;}
+
+	UFUNCTION(BlueprintCallable)
 	virtual void SetHero(AHero* NewHero);
 
 	UFUNCTION(BlueprintCallable)
