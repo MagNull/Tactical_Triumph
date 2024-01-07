@@ -35,7 +35,7 @@ bool UHeroGameplayAbility::CheckCost(const FGameplayAbilitySpecHandle Handle,
                                      FGameplayTagContainer* OptionalRelevantTags) const
 {
 	const FGameplayAbilityActorInfo* PlayerActorInfo = UBattleState::GetActivePlayer()->GetAbilitySystemComponent()->
-	                                                                                    AbilityActorInfo.Get();
+		AbilityActorInfo.Get();
 	return Super::CheckCost(Handle, PlayerActorInfo, OptionalRelevantTags);
 }
 
@@ -54,12 +54,14 @@ void UHeroGameplayAbility::OnRemoveAbility(const FGameplayAbilityActorInfo* Acto
 }
 
 bool UHeroGameplayAbility::CommitAbilityCost(const FGameplayAbilitySpecHandle Handle,
-	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
-	FGameplayTagContainer* OptionalRelevantTags)
+                                             const FGameplayAbilityActorInfo* ActorInfo,
+                                             const FGameplayAbilityActivationInfo ActivationInfo,
+                                             FGameplayTagContainer* OptionalRelevantTags)
 {
 	const FGameplayAbilityActorInfo* PlayerActorInfo = UBattleState::GetActivePlayer()->GetAbilitySystemComponent()->
-																						AbilityActorInfo.Get();
-	UE_LOG(LogTemp, Display, TEXT("Player name: %s"), *PlayerActorInfo->AbilitySystemComponent->GetOwnerActor()->GetName());
+		AbilityActorInfo.Get();
+	UE_LOG(LogTemp, Display, TEXT("Player name: %s"),
+	       *PlayerActorInfo->AbilitySystemComponent->GetOwnerActor()->GetName());
 	return Super::CommitAbilityCost(Handle, PlayerActorInfo, ActivationInfo, OptionalRelevantTags);
 }
 

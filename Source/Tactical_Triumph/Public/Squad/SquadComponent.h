@@ -39,6 +39,7 @@ public:
 	USquadComponent();
 
 	virtual void BeginPlay() override;
+	
 	virtual void BeginDestroy() override;
 
 	UFUNCTION(BlueprintCallable)
@@ -79,17 +80,22 @@ public:
 	ADropZone* GetCenterDropZone();
 
 	UFUNCTION(BlueprintCallable)
-	TArray<AHero*> GetFirstHeroesInColumns();
+	TArray<AHero*> GetFirstHeroesInColumns() const;
 
 	UFUNCTION(BlueprintCallable)
-	ADropZone* GetDropZoneByHero(AHero* Hero);
+	TArray<AHero*> GetForwardHeroes(AHero* Hero) const;
+
+	UFUNCTION(BlueprintCallable)
+	ADropZone* GetDropZoneByHero(AHero* Hero) const;
 
 	UFUNCTION(BlueprintCallable)
 	void AddSquadAbility(FSquadAbility SquadAbility, bool activate);
+	
 	void RemoveSquadAbility(TSubclassOf<UGameplayAbility> SourceAbility);
 	
 	UFUNCTION(BlueprintCallable)
 	void AddSquadEffect(FSquadEffect SquadEffect);
+	
 	void RemoveSquadEffect(TSubclassOf<UGameplayAbility> SourceAbility);
 
 protected:
@@ -100,7 +106,7 @@ protected:
 	ADropZone* GetDropZone(ESquadRow row, ESquadColumn column) const;
 
 private:
-	AHero* FirstHeroInArray(TArray<AHero*> Heroes);
+	AHero* FirstHeroInArray(TArray<AHero*> Heroes) const;
 
 private:
 	UPROPERTY(EditAnywhere)

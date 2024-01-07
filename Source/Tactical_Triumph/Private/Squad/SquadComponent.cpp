@@ -233,7 +233,7 @@ ADropZone* USquadComponent::GetDropZone(ESquadRow row, ESquadColumn column) cons
 	return nullptr;
 }
 
-AHero* USquadComponent::FirstHeroInArray(TArray<AHero*> Heroes)
+AHero* USquadComponent::FirstHeroInArray(TArray<AHero*> Heroes) const
 {
 	for (const auto Hero : Heroes)
 	{
@@ -367,7 +367,7 @@ void USquadComponent::RemoveSquadAbility(TSubclassOf<UGameplayAbility> SourceAbi
 	}
 }
 
-TArray<AHero*> USquadComponent::GetFirstHeroesInColumns()
+TArray<AHero*> USquadComponent::GetFirstHeroesInColumns() const
 {
 	TArray<AHero*> Result;
 
@@ -386,7 +386,38 @@ TArray<AHero*> USquadComponent::GetFirstHeroesInColumns()
 	return Result;
 }
 
-ADropZone* USquadComponent::GetDropZoneByHero(AHero* Hero)
+TArray<AHero*> USquadComponent::GetForwardHeroes(AHero* Hero) const
+{
+	ADropZone* HeroDropZone = GetDropZoneByHero(Hero);
+	if (HeroDropZone->Row == ESquadRow::Vanguard)
+		return {};
+	TArray<AHero*> Result;
+	switch (HeroDropZone->Row)
+	{
+	case ESquadRow::Flank:
+		{
+			AHero* VanguardHero = GetHero(ESquadRow::Vanguard, HeroDropZone->Column);
+			if(VanguardHero != nullptr)
+				Result.Add(VanguardHero);
+			break;
+		}
+	case ESquadRow::Back:
+		{
+			AHero* VanguardHero = GetHero(ESquadRow::Vanguard, HeroDropZone->Column);
+			if(VanguardHero != nullptr)
+				Result.Add(VanguardHero);
+			
+			AHero* FlankHero = GetHero(ESquadRow::Flank, HeroDropZone->Column);
+			if(FlankHero != nullptr)
+				Result.Add(FlankHero);
+			break;
+		}
+	}
+
+	return Result;
+}
+
+ADropZone* USquadComponent::GetDropZoneByHero(AHero* Hero) const
 {
 	for (const auto DropZone : DropZones)
 	{

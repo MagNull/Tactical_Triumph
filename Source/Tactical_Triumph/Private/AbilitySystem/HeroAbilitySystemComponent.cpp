@@ -1,5 +1,6 @@
 #include "AbilitySystem/HeroAbilitySystemComponent.h"
 
+
 void UHeroAbilitySystemComponent::SetAbilitySquadLineMap(TMap<FGameplayTag, TSubclassOf<UHeroGameplayAbility>> map)
 {
 	TagToAbilityMap = map;
@@ -36,6 +37,26 @@ TArray<FActiveGameplayEffectHandle> UHeroAbilitySystemComponent::GetActiveGamepl
 	return Result;
 }
 
+bool UHeroAbilitySystemComponent::CanActivateAbilityWithTag(FGameplayTagContainer TagContainer)
+{
+	TArray<FGameplayAbilitySpec> AbilitySpecs = GetActivatableAbilities();
+	FGameplayAbilitySpec* TagAbilitySpec = nullptr;
+	for (auto AbilitySpec : AbilitySpecs)
+	{
+		if (AbilitySpec.Ability->AbilityTags.HasAll(TagContainer))
+		{
+			TagAbilitySpec = &AbilitySpec;
+			break;
+		}
+	}
+	if (TagAbilitySpec == nullptr)
+	{
+		return false;
+	}
+	
+	return TagAbilitySpec->Ability->CanActivateAbility(TagAbilitySpec->Handle, AbilityActorInfo.Get());
+}
+
 void UHeroAbilitySystemComponent::OnEffectApplied(UAbilitySystemComponent* ASC, const FGameplayEffectSpec& EffectSpec,
                                                   FActiveGameplayEffectHandle ActiveEffectHandle)
 {
@@ -55,7 +76,7 @@ void UHeroAbilitySystemComponent::OnEffectApplied(UAbilitySystemComponent* ASC, 
 				ClearAbility(AbilitySpec.Handle);
 			}
 		}
-		
+
 		if (ASC->HasAnyMatchingGameplayTags(TagAbilityPair.Key.GetSingleTagContainer()))
 		{
 			if (Ability->AbilityTags.HasAny(ActivableAbilityTags))

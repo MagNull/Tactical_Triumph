@@ -1,9 +1,9 @@
 #include "Tactical_Triumph/Public/AbilitySystem/HeroAbilityTargeting.h"
 
+#include "SelectedTargetsFilter.h"
 #include "AbilitySystem/Hero.h"
 #include "Kismet/GameplayStatics.h"
 #include "Squad/SquadComponent.h"
-
 
 FHitResult AHeroAbilityTargeting::PerformTrace(AActor* InSourceActor)
 {
@@ -12,9 +12,15 @@ FHitResult AHeroAbilityTargeting::PerformTrace(AActor* InSourceActor)
 
 	FHitResult ReturnHitResult;
 	ECollisionChannel CollisionChannel;
-	FCollisionResponseParams Params;
-	UCollisionProfile::GetChannelAndResponseParams(TraceProfile.Name, CollisionChannel, Params);
+	FCollisionResponseParams RespParams;
+	UCollisionProfile::GetChannelAndResponseParams(TraceProfile.Name, CollisionChannel, RespParams);
 	PC->GetHitResultUnderCursor(CollisionChannel, false, ReturnHitResult);
+	
+	if (!ReturnHitResult.HitObjectHandle.IsValid() || !Filter.FilterPassesForActor(
+		ReturnHitResult.HitObjectHandle.FetchActor()))
+	{
+		return {};
+	}
 
 	return ReturnHitResult;
 }

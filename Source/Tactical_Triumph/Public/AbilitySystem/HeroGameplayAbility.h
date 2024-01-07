@@ -1,6 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "Abilities/GameplayAbility.h"
@@ -27,6 +25,7 @@ class TACTICAL_TRIUMPH_API UHeroGameplayAbility : public UGameplayAbility
 
 public:
 	UHeroGameplayAbility();
+
 	void RemoveCausedEffects(AActor* OwnerActor) const;
 	virtual bool CheckCost(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
 	                       FGameplayTagContainer* OptionalRelevantTags) const override;
@@ -35,6 +34,7 @@ public:
 	virtual bool CommitAbilityCost(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
 	                               const FGameplayAbilityActivationInfo ActivationInfo,
 	                               FGameplayTagContainer* OptionalRelevantTags) override;
+
 protected:
 	UFUNCTION(BlueprintCallable)
 	FSquadAbility GetSquadAbility(TSubclassOf<UGameplayAbility> Ability) const;
