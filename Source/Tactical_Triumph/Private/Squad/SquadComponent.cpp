@@ -310,6 +310,19 @@ void USquadComponent::RemoveSquadEffect(TSubclassOf<UGameplayAbility> SourceAbil
 	}
 }
 
+TArray<ADropZone*> USquadComponent::GetDropZoneInRow(int RowNumber)
+{
+	TArray<ADropZone*> Result;
+	for(auto DropZone : DropZones)
+	{
+		if(static_cast<int>(DropZone->Row) == RowNumber)
+		{
+			Result.Add(DropZone);
+		}
+	}
+	return Result;
+}
+
 void USquadComponent::AddSquadAbility(FSquadAbility SquadAbility, bool activate)
 {
 	SquadAbilities.Add(SquadAbility);
