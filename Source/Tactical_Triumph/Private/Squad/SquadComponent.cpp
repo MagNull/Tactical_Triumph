@@ -113,7 +113,7 @@ TArray<AHero*> USquadComponent::GetHeroesInRow(ESquadRow Row) const
 	return ResultArray;
 }
 
-void USquadComponent::GetNeighbours(AHero* OriginHero, AHero*& OutForward, AHero*& OutBack) const
+void USquadComponent::GetNeighbours(AHero* OriginHero, ADropZone*& OutForward, ADropZone*& OutBack) const
 {
 	const ADropZone* FindDropZone = nullptr;
 
@@ -141,7 +141,7 @@ void USquadComponent::GetNeighbours(AHero* OriginHero, AHero*& OutForward, AHero
 			UE_LOG(LogTemp, Display, TEXT("DropZone is nullptr"));
 			return;
 		}
-		OutForward = DropZone->GetHero();
+		OutForward = DropZone;
 	}
 
 
@@ -154,13 +154,13 @@ void USquadComponent::GetNeighbours(AHero* OriginHero, AHero*& OutForward, AHero
 			UE_LOG(LogTemp, Display, TEXT("DropZone is nullptr"));
 			return;
 		}
-		OutBack = DropZone->GetHero();
+		OutBack = DropZone;
 	}
 }
 
-AHero* USquadComponent::GetForwardNeighbour(AHero* OriginHero)
+ADropZone* USquadComponent::GetForwardNeighbour(AHero* OriginHero)
 {
-	AHero *Forward = nullptr, *Back = nullptr;
+	ADropZone *Forward = nullptr, *Back = nullptr;
 	GetNeighbours(OriginHero, Forward, Back);
 	UE_LOG(LogTemp, Display, TEXT("%hd"), Forward == nullptr)
 	if (Forward == nullptr)
@@ -169,9 +169,9 @@ AHero* USquadComponent::GetForwardNeighbour(AHero* OriginHero)
 	return Forward;
 }
 
-AHero* USquadComponent::GetBackNeighbour(AHero* OriginHero)
+ADropZone* USquadComponent::GetBackNeighbour(AHero* OriginHero)
 {
-	AHero *Forward = nullptr, *Back = nullptr;
+	ADropZone *Forward = nullptr, *Back = nullptr;
 	GetNeighbours(OriginHero, Forward, Back);
 
 	if (Back == nullptr)

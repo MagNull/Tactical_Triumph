@@ -41,8 +41,12 @@ void ADropZone::SetHero(AHero* NewHero)
 	CurrentHero = NewHero;
 	CurrentHero->SetActorLocation(HeroSpawnPoint->GetComponentLocation());
 	OnSetHero.Broadcast(NewHero);
-	
+
 	ApplyGrantedTag(CurrentHero);
+	for (auto ZoneEffect : ZoneEffects)
+	{
+		CurrentHero->GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*ZoneEffect.Data.Get());
+	}
 }
 
 bool ADropZone::IsCenter()
@@ -53,6 +57,15 @@ bool ADropZone::IsCenter()
 APlayerPawn* ADropZone::GetPlayerOwner()
 {
 	return PlayerOwnerPawn;
+}
+
+void ADropZone::AddZoneEffect(const FGameplayEffectSpecHandle EffectHandle)
+{
+	ZoneEffects.Add(EffectHandle);
+	if (CurrentHero)
+	{
+		CurrentHero->GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*EffectHandle.Data.Get());
+	}
 }
 
 void ADropZone::ApplyGrantedTag(AHero* Hero)
@@ -91,8 +104,31 @@ void ADropZone::RemoveGrantedTag(AHero* Hero)
 	ASC->RemoveActiveGameplayEffect(TargetEffectHandle);
 }
 
+void ADropZone::RemoveZoneEffectsFromHero(AHero* Hero)
+{
+	UAbilitySystemComponent* AbilitySystemComponent = Hero->GetAbilitySystemComponent();
+	TArray<FActiveGameplayEffectHandle> ActiveEffectHandles = AbilitySystemComponent->GetActiveGameplayEffects().
+		GetActiveEffects({});
+	for (auto ZoneEffect : ZoneEffects)
+	{
+		const FActiveGameplayEffect* TargetActiveEffect = nullptr;
+		for (auto ActiveEffectHandle : ActiveEffectHandles)
+		{
+			const FActiveGameplayEffect* Effect = AbilitySystemComponent->GetActiveGameplayEffect(ActiveEffectHandle);
+			if (AbilitySystemComponent->GetActiveGameplayEffect(ActiveEffectHandle)->Spec.Def == ZoneEffect.Data->Def)
+			{
+				TargetActiveEffect = Effect;
+				break;
+			}
+		}
+		if (TargetActiveEffect)
+			AbilitySystemComponent->RemoveActiveGameplayEffect(TargetActiveEffect->Handle);
+	}
+}
+
 void ADropZone::Clear()
 {
 	RemoveGrantedTag(CurrentHero);
+	RemoveZoneEffectsFromHero(CurrentHero);
 	CurrentHero = nullptr;
 }

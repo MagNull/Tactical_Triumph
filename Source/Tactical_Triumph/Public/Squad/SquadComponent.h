@@ -56,13 +56,13 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	virtual TArray<AHero*> GetHeroes() const;
-	virtual void GetNeighbours(AHero* OriginHero, AHero*& OutForward, AHero*& OutBack) const;
+	virtual void GetNeighbours(AHero* OriginHero, ADropZone*& OutForward, ADropZone*& OutBack) const;
 
 	UFUNCTION(BlueprintCallable)
-	AHero* GetForwardNeighbour(AHero* OriginHero);
+	ADropZone* GetForwardNeighbour(AHero* OriginHero);
 
 	UFUNCTION(BlueprintCallable)
-	AHero* GetBackNeighbour(AHero* OriginHero);
+	ADropZone* GetBackNeighbour(AHero* OriginHero);
 
 	UFUNCTION(BlueprintCallable)
 	virtual ESquadRow GetRow(AHero* Hero) const;
