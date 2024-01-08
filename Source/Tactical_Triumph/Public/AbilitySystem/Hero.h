@@ -26,9 +26,6 @@ public:
 	float GetHealth() const;
 
 	UFUNCTION(BlueprintCallable)
-	float GetMaxHealth() const;
-
-	UFUNCTION(BlueprintCallable)
 	float GetAttack() const;
 
 	UFUNCTION(BlueprintCallable)

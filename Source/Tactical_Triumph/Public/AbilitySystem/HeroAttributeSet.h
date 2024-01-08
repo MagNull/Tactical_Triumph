@@ -32,9 +32,6 @@ public:
 	virtual void OnRep_Health(const FGameplayAttributeData oldData);
 	
 	UFUNCTION()
-	virtual void OnRep_MaxHealth(const FGameplayAttributeData oldData);
-	
-	UFUNCTION()
 	virtual void OnRep_Attack(const FGameplayAttributeData oldData);
 
 	UFUNCTION()
@@ -48,10 +45,6 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "Attributes", ReplicatedUsing = OnRep_Health)
 	FGameplayAttributeData Health;
 	ATTRIBUTE_ACCESSORS(UHeroAttributeSet, Health);
-
-	UPROPERTY(BlueprintReadOnly, Category = "Attributes", ReplicatedUsing = OnRep_MaxHealth)
-	FGameplayAttributeData MaxHealth;
-	ATTRIBUTE_ACCESSORS(UHeroAttributeSet, MaxHealth);
 
 	UPROPERTY(BlueprintReadOnly, Category = "Attributes", ReplicatedUsing = OnRep_Attack)
 	FGameplayAttributeData Attack;

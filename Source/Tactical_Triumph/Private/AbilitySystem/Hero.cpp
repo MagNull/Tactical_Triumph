@@ -39,11 +39,6 @@ float AHero::GetPresentDamage() const
 	return Attributes->GetPresentDamage();
 }
 
-float AHero::GetMaxHealth() const
-{
-	return Attributes->GetMaxHealth();
-}
-
 void AHero::HandleDamageChanged(float DamageAmount, const FGameplayTagContainer DamageTags,
                                 UAbilitySystemComponent* DamageInstigator, UAbilitySystemComponent* Target)
 {

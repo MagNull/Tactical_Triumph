@@ -39,24 +39,30 @@ public:
 	USquadComponent();
 
 	virtual void BeginPlay() override;
-	
+
 	virtual void BeginDestroy() override;
 
 	UFUNCTION(BlueprintCallable)
 	void RemoveHero(AHero* Hero);
 
 	UFUNCTION(BlueprintCallable)
-	virtual bool TryMoveHeroTo(AHero* Hero, ESquadRow row, ESquadColumn column);
+	bool TryMoveHeroTo(AHero* Hero, ESquadRow row, ESquadColumn column);
 
 	UFUNCTION(BlueprintCallable)
-	virtual TArray<AHero*> GetHeroesInColumn(ESquadColumn Column) const;
+	TArray<AHero*> GetHeroesInColumn(ESquadColumn Column) const;
 
 	UFUNCTION(BlueprintCallable)
-	virtual TArray<AHero*> GetHeroesInRow(ESquadRow Row) const;
+	TArray<AHero*> GetHeroesInRow(ESquadRow Row) const;
 
 	UFUNCTION(BlueprintCallable)
-	virtual TArray<AHero*> GetHeroes() const;
-	virtual void GetNeighbours(AHero* OriginHero, ADropZone*& OutForward, ADropZone*& OutBack) const;
+	TArray<ADropZone*> GetDropZonesInRow(ESquadRow Row) const;
+
+	UFUNCTION(BlueprintCallable)
+	TArray<ADropZone*> GetDropZonesInColumn(ESquadColumn Column) const;
+
+	UFUNCTION(BlueprintCallable)
+	TArray<AHero*> GetHeroes() const;
+	void GetNeighbours(AHero* OriginHero, ADropZone*& OutForward, ADropZone*& OutBack) const;
 
 	UFUNCTION(BlueprintCallable)
 	ADropZone* GetForwardNeighbour(AHero* OriginHero);
@@ -65,16 +71,16 @@ public:
 	ADropZone* GetBackNeighbour(AHero* OriginHero);
 
 	UFUNCTION(BlueprintCallable)
-	virtual ESquadRow GetRow(AHero* Hero) const;
+	ESquadRow GetRow(AHero* Hero) const;
 
 	UFUNCTION(BlueprintCallable)
-	virtual ESquadColumn GetColumn(AHero* Hero) const;
+	ESquadColumn GetColumn(AHero* Hero) const;
 
 	UFUNCTION(BlueprintCallable)
-	virtual AHero* GetLeader();
+	AHero* GetLeader();
 
 	UFUNCTION(BlueprintCallable)
-	virtual UObject* GetPlayerOwner() const;
+	UObject* GetPlayerOwner() const;
 
 	UFUNCTION(BlueprintCallable)
 	ADropZone* GetCenterDropZone();
@@ -90,14 +96,17 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void AddSquadAbility(FSquadAbility SquadAbility, bool activate);
-	
+
+	UFUNCTION(BlueprintCallable)
 	void RemoveSquadAbility(TSubclassOf<UGameplayAbility> SourceAbility);
-	
+
 	UFUNCTION(BlueprintCallable)
 	void AddSquadEffect(FSquadEffect SquadEffect);
-	
+
+	UFUNCTION(BlueprintCallable)
 	void RemoveSquadEffect(TSubclassOf<UGameplayAbility> SourceAbility);
 
+	UFUNCTION(BlueprintCallable)
 	void RemoveDropZoneEffect(TSubclassOf<UGameplayAbility> SourceAbility);
 
 	UFUNCTION(BlueprintCallable)

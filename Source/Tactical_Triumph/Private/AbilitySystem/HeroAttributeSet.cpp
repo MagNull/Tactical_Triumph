@@ -15,7 +15,6 @@ void UHeroAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME_CONDITION_NOTIFY(UHeroAttributeSet, Health, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UHeroAttributeSet, MaxHealth, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UHeroAttributeSet, Attack, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UHeroAttributeSet, PresentDamage, COND_None, REPNOTIFY_Always);
 }
@@ -54,7 +53,7 @@ void UHeroAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 
 	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
 	{
-		const float NewHealth = FMath::Clamp(GetHealth(), 0, GetMaxHealth());
+		const float NewHealth = FMath::Clamp(GetHealth(), 0, 1000);
 		DeltaValue = GetHealth() - NewHealth;
 		SetHealth(NewHealth);
 		if (Target)
@@ -65,9 +64,12 @@ void UHeroAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 
 	if (Data.EvaluatedData.Attribute == GetPresentDamageAttribute())
 	{
+		//TODO: Whats wrong
 		const float NewPresentDamage = FMath::Clamp(GetPresentDamage(), 0, 1000);
 		DeltaValue = GetPresentDamage() - NewPresentDamage;
-		SetPresentDamage(NewPresentDamage);
+		UE_LOG(LogTemp, Display, TEXT("%s damage value %f"), *GetOwningActor()->GetName(), GetPresentDamage());
+		if (GetPresentDamage() < 0)
+			SetPresentDamage(0);
 		if (Target)
 		{
 			Target->HandleDamageChanged(DeltaValue, TagContainer, Instigator, Target->GetAbilitySystemComponent());
@@ -89,11 +91,6 @@ void UHeroAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 void UHeroAttributeSet::OnRep_Health(const FGameplayAttributeData oldData)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UHeroAttributeSet, Health, oldData);
-}
-
-void UHeroAttributeSet::OnRep_MaxHealth(const FGameplayAttributeData oldData)
-{
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UHeroAttributeSet, MaxHealth, oldData);
 }
 
 void UHeroAttributeSet::OnRep_Attack(const FGameplayAttributeData oldData)
