@@ -40,9 +40,9 @@ void ADropZone::SetHero(AHero* NewHero)
 
 	CurrentHero = NewHero;
 	CurrentHero->SetActorLocation(HeroSpawnPoint->GetComponentLocation());
-	ApplyGrantedTag(CurrentHero);
-
 	OnSetHero.Broadcast(NewHero);
+	
+	ApplyGrantedTag(CurrentHero);
 }
 
 bool ADropZone::IsCenter()
@@ -77,7 +77,7 @@ void ADropZone::RemoveGrantedTag(AHero* Hero)
 	for (auto EffectHandle : EffectsContainer)
 	{
 		const FActiveGameplayEffect* Effect = ASC->GetActiveGameplayEffect(EffectHandle);
-		
+
 		if (Effect->Spec.DynamicGrantedTags.HasTag(GrantedTag))
 			TargetEffectHandle = EffectHandle;
 	}

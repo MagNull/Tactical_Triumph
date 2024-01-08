@@ -53,7 +53,7 @@ bool UHeroAbilitySystemComponent::CanActivateAbilityWithTag(FGameplayTagContaine
 	{
 		return false;
 	}
-	
+
 	return TagAbilitySpec->Ability->CanActivateAbility(TagAbilitySpec->Handle, AbilityActorInfo.Get());
 }
 

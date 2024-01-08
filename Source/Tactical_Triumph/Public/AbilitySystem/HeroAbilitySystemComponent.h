@@ -30,8 +30,6 @@ private:
 	FGameplayTagContainer ActivableAbilityTags;
 	UPROPERTY(EditAnywhere)
 	FGameplayTagContainer PositionTags;
-	UPROPERTY(EditAnywhere)
-	FGameplayTag InterceptionTag;
 
 	TMap<FGameplayTag, TSubclassOf<UHeroGameplayAbility>> TagToAbilityMap;
 	FDelegateHandle EffectAppliedHandle;

@@ -258,9 +258,12 @@ void USquadComponent::AddSquadEffect(FSquadEffect SquadEffect)
 		const AHero* Hero = DropZone->GetHero();
 		if (!Hero)
 			continue;
+		UE_LOG(LogTemp, Display, TEXT("Target hero is %s"), *Hero->GetName());
 		UAbilitySystemComponent* LeaderASC = GetLeader()->GetAbilitySystemComponent();
 		UAbilitySystemComponent* TargetASC = Hero->GetAbilitySystemComponent();
 
+		UE_LOG(LogTemp, Display, TEXT("%s apply effect %s to %s"), *GetLeader()->GetName(),
+		       *SquadEffect.EffectSpecHandle.Data.Get()->Def.GetName(), *Hero->GetName());
 		LeaderASC->ApplyGameplayEffectSpecToTarget(*SquadEffect.EffectSpecHandle.Data, TargetASC);
 	}
 }
@@ -397,18 +400,18 @@ TArray<AHero*> USquadComponent::GetForwardHeroes(AHero* Hero) const
 	case ESquadRow::Flank:
 		{
 			AHero* VanguardHero = GetHero(ESquadRow::Vanguard, HeroDropZone->Column);
-			if(VanguardHero != nullptr)
+			if (VanguardHero != nullptr)
 				Result.Add(VanguardHero);
 			break;
 		}
 	case ESquadRow::Back:
 		{
 			AHero* VanguardHero = GetHero(ESquadRow::Vanguard, HeroDropZone->Column);
-			if(VanguardHero != nullptr)
+			if (VanguardHero != nullptr)
 				Result.Add(VanguardHero);
-			
+
 			AHero* FlankHero = GetHero(ESquadRow::Flank, HeroDropZone->Column);
-			if(FlankHero != nullptr)
+			if (FlankHero != nullptr)
 				Result.Add(FlankHero);
 			break;
 		}
