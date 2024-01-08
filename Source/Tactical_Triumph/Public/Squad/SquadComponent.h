@@ -92,6 +92,9 @@ public:
 	void AddSquadEffect(FSquadEffect SquadEffect);
 	void RemoveSquadEffect(TSubclassOf<UGameplayAbility> SourceAbility);
 
+	UFUNCTION(BlueprintCallable)
+	TArray<ADropZone*> GetDropZoneInRow(int RowNumber);
+
 protected:
 	AHero* GetHero(ESquadRow Row, ESquadColumn Column) const;
 
