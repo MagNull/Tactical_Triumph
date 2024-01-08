@@ -310,6 +310,14 @@ void USquadComponent::RemoveSquadEffect(TSubclassOf<UGameplayAbility> SourceAbil
 	}
 }
 
+void USquadComponent::RemoveDropZoneEffect(TSubclassOf<UGameplayAbility> SourceAbility)
+{
+	for (auto DropZone : DropZones)
+	{
+		DropZone->RemoveZoneEffect(SourceAbility);
+	}
+}
+
 TArray<ADropZone*> USquadComponent::GetDropZoneInRow(int RowNumber)
 {
 	TArray<ADropZone*> Result;

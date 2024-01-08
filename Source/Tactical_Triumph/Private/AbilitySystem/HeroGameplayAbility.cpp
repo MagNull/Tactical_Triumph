@@ -49,8 +49,10 @@ void UHeroGameplayAbility::OnRemoveAbility(const FGameplayAbilityActorInfo* Acto
 		UE_LOG(LogTemp, Warning, TEXT("%s get Squad is null"), *GetName());
 		return;
 	}
-	Squad->RemoveSquadAbility(GetClass());
-	Squad->RemoveSquadEffect(GetClass());
+	UClass* AbilityClass = GetClass();
+	Squad->RemoveDropZoneEffect(AbilityClass);
+	Squad->RemoveSquadAbility(AbilityClass);
+	Squad->RemoveSquadEffect(AbilityClass);
 }
 
 bool UHeroGameplayAbility::CommitAbilityCost(const FGameplayAbilitySpecHandle Handle,

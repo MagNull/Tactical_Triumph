@@ -44,9 +44,9 @@ void ADropZone::SetHero(AHero* NewHero)
 	OnSetHero.Broadcast(NewHero);
 
 	ApplyGrantedTag(CurrentHero);
-	for (auto ZoneEffect : ZoneEffects)
+	for (auto ZoneEffect : ZoneEffectPairs)
 	{
-		CurrentHero->GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*ZoneEffect.Data.Get());
+		CurrentHero->GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*ZoneEffect.Key.Data.Get());
 	}
 }
 
@@ -60,12 +60,26 @@ APlayerPawn* ADropZone::GetPlayerOwner()
 	return PlayerOwnerPawn;
 }
 
-void ADropZone::AddZoneEffect(const FGameplayEffectSpecHandle EffectHandle)
+void ADropZone::AddZoneEffect(const FGameplayEffectSpecHandle EffectHandle, UGameplayAbility* SourceAbility)
 {
-	ZoneEffects.Add(EffectHandle);
+	ZoneEffectPairs.Add({EffectHandle, SourceAbility->GetClass()});
 	if (CurrentHero)
 	{
 		CurrentHero->GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*EffectHandle.Data.Get());
+	}
+}
+
+void ADropZone::RemoveZoneEffect(TSubclassOf<UGameplayAbility> Ability)
+{
+	TArray<TTuple<FGameplayEffectSpecHandle, UClass*>> ToRemove;
+	for (auto ZoneEffect : ZoneEffectPairs)
+	{
+		if (ZoneEffect.Value == Ability)
+			ToRemove.Add(ZoneEffect);
+	}
+	for (auto Tuple : ToRemove)
+	{
+		ZoneEffectPairs.Remove(Tuple);
 	}
 }
 
@@ -110,13 +124,14 @@ void ADropZone::RemoveZoneEffectsFromHero(AHero* Hero)
 	UAbilitySystemComponent* AbilitySystemComponent = Hero->GetAbilitySystemComponent();
 	TArray<FActiveGameplayEffectHandle> ActiveEffectHandles = AbilitySystemComponent->GetActiveGameplayEffects().
 		GetActiveEffects({});
-	for (auto ZoneEffect : ZoneEffects)
+	for (auto ZoneEffect : ZoneEffectPairs)
 	{
 		const FActiveGameplayEffect* TargetActiveEffect = nullptr;
 		for (auto ActiveEffectHandle : ActiveEffectHandles)
 		{
 			const FActiveGameplayEffect* Effect = AbilitySystemComponent->GetActiveGameplayEffect(ActiveEffectHandle);
-			if (AbilitySystemComponent->GetActiveGameplayEffect(ActiveEffectHandle)->Spec.Def == ZoneEffect.Data->Def)
+			if (AbilitySystemComponent->GetActiveGameplayEffect(ActiveEffectHandle)->Spec.Def ==
+				ZoneEffect.Key.Data->Def)
 			{
 				TargetActiveEffect = Effect;
 				break;
@@ -129,9 +144,9 @@ void ADropZone::RemoveZoneEffectsFromHero(AHero* Hero)
 
 void ADropZone::Clear()
 {
-	if(CurrentHero == nullptr)
+	if (CurrentHero == nullptr)
 		return;
-	
+
 	RemoveGrantedTag(CurrentHero);
 	RemoveZoneEffectsFromHero(CurrentHero);
 	CurrentHero = nullptr;

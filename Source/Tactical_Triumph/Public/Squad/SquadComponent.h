@@ -98,6 +98,8 @@ public:
 	
 	void RemoveSquadEffect(TSubclassOf<UGameplayAbility> SourceAbility);
 
+	void RemoveDropZoneEffect(TSubclassOf<UGameplayAbility> SourceAbility);
+
 	UFUNCTION(BlueprintCallable)
 	TArray<ADropZone*> GetDropZoneInRow(int RowNumber);
 
