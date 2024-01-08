@@ -113,7 +113,7 @@ TArray<AHero*> USquadComponent::GetHeroesInRow(ESquadRow Row) const
 	return ResultArray;
 }
 
-void USquadComponent::GetNeighbours(AHero* OriginHero, AHero*& OutForward, AHero*& OutBack) const
+void USquadComponent::GetNeighbours(AHero* OriginHero, ADropZone*& OutForward, ADropZone*& OutBack) const
 {
 	const ADropZone* FindDropZone = nullptr;
 
@@ -141,7 +141,7 @@ void USquadComponent::GetNeighbours(AHero* OriginHero, AHero*& OutForward, AHero
 			UE_LOG(LogTemp, Display, TEXT("DropZone is nullptr"));
 			return;
 		}
-		OutForward = DropZone->GetHero();
+		OutForward = DropZone;
 	}
 
 
@@ -154,13 +154,13 @@ void USquadComponent::GetNeighbours(AHero* OriginHero, AHero*& OutForward, AHero
 			UE_LOG(LogTemp, Display, TEXT("DropZone is nullptr"));
 			return;
 		}
-		OutBack = DropZone->GetHero();
+		OutBack = DropZone;
 	}
 }
 
-AHero* USquadComponent::GetForwardNeighbour(AHero* OriginHero)
+ADropZone* USquadComponent::GetForwardNeighbour(AHero* OriginHero)
 {
-	AHero *Forward = nullptr, *Back = nullptr;
+	ADropZone *Forward = nullptr, *Back = nullptr;
 	GetNeighbours(OriginHero, Forward, Back);
 	UE_LOG(LogTemp, Display, TEXT("%hd"), Forward == nullptr)
 	if (Forward == nullptr)
@@ -169,9 +169,9 @@ AHero* USquadComponent::GetForwardNeighbour(AHero* OriginHero)
 	return Forward;
 }
 
-AHero* USquadComponent::GetBackNeighbour(AHero* OriginHero)
+ADropZone* USquadComponent::GetBackNeighbour(AHero* OriginHero)
 {
-	AHero *Forward = nullptr, *Back = nullptr;
+	ADropZone *Forward = nullptr, *Back = nullptr;
 	GetNeighbours(OriginHero, Forward, Back);
 
 	if (Back == nullptr)
@@ -233,7 +233,7 @@ ADropZone* USquadComponent::GetDropZone(ESquadRow row, ESquadColumn column) cons
 	return nullptr;
 }
 
-AHero* USquadComponent::FirstHeroInArray(TArray<AHero*> Heroes)
+AHero* USquadComponent::FirstHeroInArray(TArray<AHero*> Heroes) const
 {
 	for (const auto Hero : Heroes)
 	{
@@ -258,9 +258,12 @@ void USquadComponent::AddSquadEffect(FSquadEffect SquadEffect)
 		const AHero* Hero = DropZone->GetHero();
 		if (!Hero)
 			continue;
+		UE_LOG(LogTemp, Display, TEXT("Target hero is %s"), *Hero->GetName());
 		UAbilitySystemComponent* LeaderASC = GetLeader()->GetAbilitySystemComponent();
 		UAbilitySystemComponent* TargetASC = Hero->GetAbilitySystemComponent();
 
+		UE_LOG(LogTemp, Display, TEXT("%s apply effect %s to %s"), *GetLeader()->GetName(),
+		       *SquadEffect.EffectSpecHandle.Data.Get()->Def.GetName(), *Hero->GetName());
 		LeaderASC->ApplyGameplayEffectSpecToTarget(*SquadEffect.EffectSpecHandle.Data, TargetASC);
 	}
 }
@@ -380,7 +383,7 @@ void USquadComponent::RemoveSquadAbility(TSubclassOf<UGameplayAbility> SourceAbi
 	}
 }
 
-TArray<AHero*> USquadComponent::GetFirstHeroesInColumns()
+TArray<AHero*> USquadComponent::GetFirstHeroesInColumns() const
 {
 	TArray<AHero*> Result;
 
@@ -399,7 +402,38 @@ TArray<AHero*> USquadComponent::GetFirstHeroesInColumns()
 	return Result;
 }
 
-ADropZone* USquadComponent::GetDropZoneByHero(AHero* Hero)
+TArray<AHero*> USquadComponent::GetForwardHeroes(AHero* Hero) const
+{
+	ADropZone* HeroDropZone = GetDropZoneByHero(Hero);
+	if (HeroDropZone->Row == ESquadRow::Vanguard)
+		return {};
+	TArray<AHero*> Result;
+	switch (HeroDropZone->Row)
+	{
+	case ESquadRow::Flank:
+		{
+			AHero* VanguardHero = GetHero(ESquadRow::Vanguard, HeroDropZone->Column);
+			if (VanguardHero != nullptr)
+				Result.Add(VanguardHero);
+			break;
+		}
+	case ESquadRow::Back:
+		{
+			AHero* VanguardHero = GetHero(ESquadRow::Vanguard, HeroDropZone->Column);
+			if (VanguardHero != nullptr)
+				Result.Add(VanguardHero);
+
+			AHero* FlankHero = GetHero(ESquadRow::Flank, HeroDropZone->Column);
+			if (FlankHero != nullptr)
+				Result.Add(FlankHero);
+			break;
+		}
+	}
+
+	return Result;
+}
+
+ADropZone* USquadComponent::GetDropZoneByHero(AHero* Hero) const
 {
 	for (const auto DropZone : DropZones)
 	{

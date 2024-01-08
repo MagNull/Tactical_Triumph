@@ -31,16 +31,16 @@ public:
 	UFUNCTION(BlueprintCallable)
 	static void ChangeLineTurn();
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, BlueprintPure)
 	static class APlayerPawn* GetActivePlayer();
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, BlueprintPure)
 	static class APlayerPawn* GetNotActivePlayer();
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, BlueprintPure)
 	static class APlayerPawn* GetAttackPlayer();
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, BlueprintPure)
 	static class APlayerPawn* GetDefensePlayer();
 
 	UFUNCTION(BlueprintCallable)

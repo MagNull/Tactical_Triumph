@@ -43,6 +43,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	class APlayerPawn* GetPlayerOwner();
 
+	UFUNCTION(BlueprintCallable)
+	void AddZoneEffect(const FGameplayEffectSpecHandle EffectHandle);
+
 	void Clear();
 	
 protected:
@@ -51,6 +54,8 @@ protected:
 
 	UFUNCTION(BlueprintCallable)
 	void RemoveGrantedTag(AHero* Hero);
+private:
+	void RemoveZoneEffectsFromHero(AHero* Hero);
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
@@ -71,6 +76,8 @@ private:
 	class APlayerPawn* PlayerOwnerPawn;
 	UPROPERTY(EditAnywhere, Category = "Position Tag")
 	FGameplayTag GrantedTag;
+
+	TArray<FGameplayEffectSpecHandle> ZoneEffects;
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UGameplayEffect> InfiniteEffect;

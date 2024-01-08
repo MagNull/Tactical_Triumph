@@ -10,6 +10,7 @@ APlayerPawn::APlayerPawn()
 {
 	PrimaryActorTick.bCanEverTick = false;
 	AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("Ability System Component"));
+	SquadComponent = CreateDefaultSubobject<USquadComponent>(TEXT("Squad Component"));
 	AbilitySystemComponent->SetIsReplicated(true);
 
 	Attributes = CreateDefaultSubobject<UPlayerAttributeSet>(TEXT("Attributes"));
