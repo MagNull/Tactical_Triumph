@@ -41,16 +41,11 @@ public:
 	bool IsCenter();
 
 	UFUNCTION(BlueprintCallable)
-	class APlayerPawn* GetPlayerOwner();
-
-	UFUNCTION(BlueprintCallable)
 	void AddZoneEffect(const FGameplayEffectSpecHandle EffectHandle, UGameplayAbility* SourceAbility);
 
 	void RemoveZoneEffect(TSubclassOf<UGameplayAbility> Ability);
 	
 	void Clear();
-
-	void SetPlayerOwner(APlayerPawn* Player);
 	
 protected:
 	UFUNCTION(BlueprintCallable)
@@ -75,12 +70,10 @@ protected:
 	USceneComponent* HeroSpawnPoint;
 	USceneComponent* Root;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	APlayerPawn* PlayerOwner;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class APlayerPawn* PlayerOwnerPawn;
 
 private:
-	UPROPERTY(EditAnywhere)
-	class APlayerPawn* PlayerOwnerPawn;
 	UPROPERTY(EditAnywhere, Category = "Position Tag")
 	FGameplayTag GrantedTag;
 
