@@ -113,6 +113,33 @@ TArray<AHero*> USquadComponent::GetHeroesInRow(ESquadRow Row) const
 	return ResultArray;
 }
 
+//TODO: Replace with 1 method instead zones and heroes
+TArray<ADropZone*> USquadComponent::GetDropZonesInRow(ESquadRow Row) const
+{
+	TArray<ADropZone*> ResultArray;
+	for (const auto DropZone : DropZones)
+	{
+		if (DropZone->Row == Row)
+		{
+			ResultArray.Add(DropZone);
+		}
+	}
+	return ResultArray;
+}
+
+TArray<ADropZone*> USquadComponent::GetDropZonesInColumn(ESquadColumn Column) const
+{
+	TArray<ADropZone*> ResultArray;
+	for (const auto DropZone : DropZones)
+	{
+		if (DropZone->Column == Column)
+		{
+			ResultArray.Add(DropZone);
+		}
+	}
+	return ResultArray;
+}
+
 void USquadComponent::GetNeighbours(AHero* OriginHero, ADropZone*& OutForward, ADropZone*& OutBack) const
 {
 	const ADropZone* FindDropZone = nullptr;
@@ -321,9 +348,9 @@ void USquadComponent::RemoveDropZoneEffect(TSubclassOf<UGameplayAbility> SourceA
 TArray<ADropZone*> USquadComponent::GetDropZoneInRow(int RowNumber)
 {
 	TArray<ADropZone*> Result;
-	for(auto DropZone : DropZones)
+	for (auto DropZone : DropZones)
 	{
-		if(static_cast<int>(DropZone->Row) == RowNumber)
+		if (static_cast<int>(DropZone->Row) == RowNumber)
 		{
 			Result.Add(DropZone);
 		}

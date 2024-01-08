@@ -15,10 +15,10 @@ class UBattleState : public UObject
 public:
 	UFUNCTION(BlueprintCallable)
 	static void Reset();
-	
+
 	UFUNCTION(BlueprintCallable)
 	static void ResetWithoutPlayers();
-	
+
 	UFUNCTION(BlueprintCallable, meta = (WorldContext="WorldContextObject"))
 	static void InitializePlayers(class APlayerPawn* FirstPlayerPawn, class APlayerPawn* SecondPlayerPawn);
 
@@ -34,6 +34,9 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	static class APlayerPawn* GetActivePlayer();
 
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	static class APlayerPawn* GetOtherPlayer(APlayerPawn* Player);
+	
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	static class APlayerPawn* GetNotActivePlayer();
 
@@ -58,17 +61,17 @@ public:
 	static int GetLineTurnInt();
 
 	UFUNCTION(BlueprintCallable)
-	static void AddTurnCount();
-	
-	UFUNCTION(BlueprintCallable)
-	static int GetTurnCount();
+	static void AddRoundCount();
+
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	static int GetRoundCount();
 
 private:
 	static void AddPlayer(APlayerPawn* Player);
 
 private:
 	static inline TArray<class APlayerPawn*> Players = {};
-	
+
 	static inline int StartPlayerIndex = 0;
 
 	static inline ESquadRow LineTurn = ESquadRow::Vanguard;

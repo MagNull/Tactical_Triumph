@@ -53,6 +53,16 @@ APlayerPawn* UBattleState::GetActivePlayer()
 	return IsFirstPlayerActive ? Players[0] : Players[1];
 }
 
+APlayerPawn* UBattleState::GetOtherPlayer(APlayerPawn* Player)
+{
+	for (auto PlayerPawn : Players)
+	{
+		if (PlayerPawn != Player)
+			return PlayerPawn;
+	}
+	return nullptr;
+}
+
 APlayerPawn* UBattleState::GetNotActivePlayer()
 {
 	if (Players.IsEmpty() || Players.Num() < 2)
@@ -96,12 +106,12 @@ int UBattleState::GetLineTurnInt()
 	return static_cast<int>(LineTurn);
 }
 
-void UBattleState::AddTurnCount()
+void UBattleState::AddRoundCount()
 {
 	TurnCount += 1;
 }
 
-int UBattleState::GetTurnCount()
+int UBattleState::GetRoundCount()
 {
 	return TurnCount;
 }

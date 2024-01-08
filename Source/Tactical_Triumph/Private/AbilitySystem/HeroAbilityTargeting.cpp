@@ -81,7 +81,7 @@ FGameplayAbilityTargetDataHandle AHeroAbilityTargeting::MakeTargetData(const FHi
 			const USquadComponent* Squad = UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->GetComponentByClass<
 				USquadComponent>();
 			const ESquadColumn TargetColumn = Squad->GetColumn(TargetHero);
-			for (const auto Hero : Squad->GetHeroesInColumn(TargetColumn))
+			for (const auto Hero : Squad->GetDropZonesInColumn(TargetColumn))
 			{
 				TargetActors.Add(Hero);
 			}
@@ -95,7 +95,7 @@ FGameplayAbilityTargetDataHandle AHeroAbilityTargeting::MakeTargetData(const FHi
 			const USquadComponent* Squad = UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->GetComponentByClass<
 				USquadComponent>();
 			const ESquadRow TargetRow = Squad->GetRow(TargetHero);
-			for (const auto Hero : Squad->GetHeroesInRow(TargetRow))
+			for (const auto Hero : Squad->GetDropZonesInRow(TargetRow))
 			{
 				TargetActors.Add(Hero);
 			}
