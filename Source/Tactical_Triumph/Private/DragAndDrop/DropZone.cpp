@@ -151,3 +151,12 @@ void ADropZone::Clear()
 	RemoveZoneEffectsFromHero(CurrentHero);
 	CurrentHero = nullptr;
 }
+
+void ADropZone::SetPlayerOwner(APlayerPawn* Player)
+{
+	if(Player != nullptr)
+	{
+		PlayerOwner = Player;
+	}
+	
+}

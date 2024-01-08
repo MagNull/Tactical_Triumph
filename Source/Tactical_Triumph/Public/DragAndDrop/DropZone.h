@@ -49,6 +49,8 @@ public:
 	void RemoveZoneEffect(TSubclassOf<UGameplayAbility> Ability);
 	
 	void Clear();
+
+	void SetPlayerOwner(APlayerPawn* Player);
 	
 protected:
 	UFUNCTION(BlueprintCallable)
@@ -72,6 +74,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	USceneComponent* HeroSpawnPoint;
 	USceneComponent* Root;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	APlayerPawn* PlayerOwner;
 
 private:
 	UPROPERTY(EditAnywhere)
