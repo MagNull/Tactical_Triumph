@@ -9,9 +9,9 @@ void UBattleState::Reset()
 
 void UBattleState::ResetWithoutPlayers()
 {
-	StartPlayerIndex = 1;
+	StartPlayerIndex = 0;
 	LineTurn = ESquadRow::Vanguard;
-	IsFirstPlayerActive = true;
+	IsFirstPlayerActive = false;
 	TurnCount = 1;
 }
 
@@ -50,7 +50,7 @@ APlayerPawn* UBattleState::GetActivePlayer()
 		UE_LOG(LogTemp, Error, TEXT("There is not any players!"));
 		return nullptr;
 	}
-	return IsFirstPlayerActive ? Players[0] : Players[1];
+	return IsFirstPlayerActive ? Players[1] : Players[0];
 }
 
 APlayerPawn* UBattleState::GetOtherPlayer(APlayerPawn* Player)
@@ -67,7 +67,7 @@ APlayerPawn* UBattleState::GetNotActivePlayer()
 {
 	if (Players.IsEmpty() || Players.Num() < 2)
 		return nullptr;
-	return IsFirstPlayerActive ? Players[1] : Players[0];
+	return IsFirstPlayerActive ? Players[0] : Players[1];
 }
 
 APlayerPawn* UBattleState::GetAttackPlayer()
