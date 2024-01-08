@@ -2,6 +2,7 @@
 
 #include "AbilitySystemComponent.h"
 #include "AbilitySystem/Hero.h"
+#include "Kismet/GameplayStatics.h"
 
 ADropZone::ADropZone()
 {
@@ -128,6 +129,9 @@ void ADropZone::RemoveZoneEffectsFromHero(AHero* Hero)
 
 void ADropZone::Clear()
 {
+	if(CurrentHero == nullptr)
+		return;
+	
 	RemoveGrantedTag(CurrentHero);
 	RemoveZoneEffectsFromHero(CurrentHero);
 	CurrentHero = nullptr;
