@@ -1,6 +1,8 @@
 ﻿#include "Tactical_Triumph/Public/AbilitySystem/HeroGameplayAbility.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
 #include "BattleState.h"
+#include "Abilities/GameplayAbilityTargetDataFilter.h"
 #include "AbilitySystem/Hero.h"
 #include "AbilitySystem/HeroAbilitySystemComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -9,6 +11,30 @@
 
 UHeroGameplayAbility::UHeroGameplayAbility()
 {
+}
+
+//TODO: FULL REFACTORING
+TArray<ADropZone*> UHeroGameplayAbility::GetTargetHeroDropZones(FGameplayTargetDataFilterHandle Filter,
+                                                                USquadComponent* TargetSquad) const
+{
+	TArray<AActor*> TargetHeroes;
+	UGameplayStatics::GetAllActorsOfClass(GetActorInfo().OwnerActor->GetWorld(), AHero::StaticClass(), TargetHeroes);
+	FGameplayAbilityTargetDataHandle AllHeroesTargetDataHandle =
+		UAbilitySystemBlueprintLibrary::AbilityTargetDataFromActorArray(TargetHeroes, false);
+	AllHeroesTargetDataHandle = UAbilitySystemBlueprintLibrary::FilterTargetData(AllHeroesTargetDataHandle,
+		Filter);
+
+	TArray<ADropZone*> DropZones;
+	for (auto TargetHero : TargetHeroes)
+	{
+		ADropZone* DropZone = TargetSquad->GetDropZoneByHero(Cast<AHero>(TargetHero));
+		if (DropZone)
+		{
+			DropZones.Add(DropZone);
+		}
+	}
+
+	return DropZones;
 }
 
 void UHeroGameplayAbility::RemoveCausedEffects(AActor* OwnerActor) const

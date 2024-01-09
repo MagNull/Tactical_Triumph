@@ -23,6 +23,11 @@ class TACTICAL_TRIUMPH_API AHeroAbilityTargeting : public AGameplayAbilityTarget
 	GENERATED_BODY()
 
 public:
+	UFUNCTION(BlueprintImplementableEvent)
+	void WrongTargetWarning();
+
+	virtual bool IsConfirmTargetingAllowed() override;
+	
 	virtual FHitResult PerformTrace(AActor* InSourceActor) override;
 	virtual bool ShouldProduceTargetData() const override;
 	virtual void ConfirmTargetingAndContinue() override;

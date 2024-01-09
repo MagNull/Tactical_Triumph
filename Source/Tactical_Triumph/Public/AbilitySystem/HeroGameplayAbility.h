@@ -5,6 +5,8 @@
 #include "HeroGameplayAbility.generated.h"
 
 
+struct FGameplayTargetDataFilterHandle;
+class ADropZone;
 struct FSquadEffect;
 struct FSquadAbility;
 class UHeroAbilitySystemComponent;
@@ -26,14 +28,17 @@ class TACTICAL_TRIUMPH_API UHeroGameplayAbility : public UGameplayAbility
 public:
 	UHeroGameplayAbility();
 
+	UFUNCTION(BlueprintCallable)
+	TArray<ADropZone*> GetTargetHeroDropZones(FGameplayTargetDataFilterHandle Filter, USquadComponent* TargetSquad) const;
+
 	void RemoveCausedEffects(AActor* OwnerActor) const;
 	virtual bool CheckCost(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
-	                       FGameplayTagContainer* OptionalRelevantTags) const override;
+						   FGameplayTagContainer* OptionalRelevantTags) const override;
 
 	virtual void OnRemoveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec) override;
 	virtual bool CommitAbilityCost(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
-	                               const FGameplayAbilityActivationInfo ActivationInfo,
-	                               FGameplayTagContainer* OptionalRelevantTags) override;
+								   const FGameplayAbilityActivationInfo ActivationInfo,
+								   FGameplayTagContainer* OptionalRelevantTags) override;
 
 protected:
 	UFUNCTION(BlueprintCallable)

@@ -112,6 +112,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	TArray<ADropZone*> GetDropZoneInRow(int RowNumber);
 
+	UFUNCTION(BlueprintCallable)
+	TArray<ADropZone*> GetEmptyDropZones() const;
+
 protected:
 	AHero* GetHero(ESquadRow Row, ESquadColumn Column) const;
 
@@ -125,7 +128,6 @@ private:
 private:
 	UPROPERTY(EditAnywhere)
 	TArray<ADropZone*> DropZones;
-	TArray<FSquadEffect> SquadEffects;
 	TArray<FSquadAbility> SquadAbilities;
 
 	UPROPERTY(EditAnywhere)

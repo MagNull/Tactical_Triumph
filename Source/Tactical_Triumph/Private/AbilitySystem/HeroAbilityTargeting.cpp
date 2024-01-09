@@ -1,9 +1,23 @@
 #include "Tactical_Triumph/Public/AbilitySystem/HeroAbilityTargeting.h"
 
+#include "BattleState.h"
 #include "SelectedTargetsFilter.h"
 #include "AbilitySystem/Hero.h"
 #include "Kismet/GameplayStatics.h"
+#include "Pawn/PlayerPawn.h"
 #include "Squad/SquadComponent.h"
+
+bool AHeroAbilityTargeting::IsConfirmTargetingAllowed()
+{
+	FGameplayAbilityTargetDataHandle Handle = MakeTargetData(PerformTrace(SourceActor));
+	const bool isAllowed = Handle.Get(0)->GetActors().Num() != 0;
+	if(!isAllowed)
+	{
+		WrongTargetWarning();
+	}
+	
+	return isAllowed;
+}
 
 FHitResult AHeroAbilityTargeting::PerformTrace(AActor* InSourceActor)
 {
@@ -15,7 +29,7 @@ FHitResult AHeroAbilityTargeting::PerformTrace(AActor* InSourceActor)
 	FCollisionResponseParams RespParams;
 	UCollisionProfile::GetChannelAndResponseParams(TraceProfile.Name, CollisionChannel, RespParams);
 	PC->GetHitResultUnderCursor(CollisionChannel, false, ReturnHitResult);
-	
+
 	if (!ReturnHitResult.HitObjectHandle.IsValid() || !Filter.FilterPassesForActor(
 		ReturnHitResult.HitObjectHandle.FetchActor()))
 	{
@@ -38,6 +52,7 @@ void AHeroAbilityTargeting::ConfirmTargetingAndContinue()
 	{
 		bDebug = false;
 		FGameplayAbilityTargetDataHandle Handle = MakeTargetData(PerformTrace(SourceActor));
+		
 		TargetDataReadyDelegate.Broadcast(Handle);
 	}
 }
@@ -50,6 +65,13 @@ void AHeroAbilityTargeting::StartTargeting(UGameplayAbility* Ability)
 
 void AHeroAbilityTargeting::ConfirmTargeting()
 {
+	FGameplayAbilityTargetDataHandle Handle = MakeTargetData(PerformTrace(SourceActor));
+		
+	if(Handle.Get(0)->GetActors().Num() == 0)
+	{
+		WrongTargetWarning();
+		return;
+	}
 	Super::ConfirmTargeting();
 	UGameplayStatics::GetPlayerController(GetWorld(), 0)->bEnableClickEvents = true;
 }
@@ -70,6 +92,8 @@ FGameplayAbilityTargetDataHandle AHeroAbilityTargeting::MakeTargetData(const FHi
 	{
 	case ESelectionType::Hero:
 		{
+			UE_LOG(LogTemp, Display, TEXT("Hero"));
+
 			if (TargetHero)
 				TargetActors.Add(TargetActor);
 			break;
@@ -78,12 +102,16 @@ FGameplayAbilityTargetDataHandle AHeroAbilityTargeting::MakeTargetData(const FHi
 		{
 			if (!TargetHero)
 				break;
-			const USquadComponent* Squad = UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->GetComponentByClass<
+			const USquadComponent* Squad = UBattleState::GetActivePlayer()->GetComponentByClass<
 				USquadComponent>();
 			const ESquadColumn TargetColumn = Squad->GetColumn(TargetHero);
-			for (const auto Hero : Squad->GetDropZonesInColumn(TargetColumn))
+			for (const auto DropZone : Squad->GetDropZonesInColumn(TargetColumn))
 			{
-				TargetActors.Add(Hero);
+				AHero* Hero = DropZone->GetHero();
+				if (Hero)
+				{
+					TargetActors.Add(Hero);
+				}
 			}
 			break;
 		}
@@ -92,24 +120,29 @@ FGameplayAbilityTargetDataHandle AHeroAbilityTargeting::MakeTargetData(const FHi
 			if (!TargetHero)
 				break;
 
-			const USquadComponent* Squad = UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->GetComponentByClass<
+			const USquadComponent* Squad = UBattleState::GetActivePlayer()->GetComponentByClass<
 				USquadComponent>();
 			const ESquadRow TargetRow = Squad->GetRow(TargetHero);
-			for (const auto Hero : Squad->GetDropZonesInRow(TargetRow))
+			for (const auto DropZone : Squad->GetDropZonesInRow(TargetRow))
 			{
-				TargetActors.Add(Hero);
+				AHero* Hero = DropZone->GetHero();
+				if (Hero)
+				{
+					TargetActors.Add(Hero);
+				}
 			}
 			break;
 		}
 	case ESelectionType::Cell:
 		{
 			ADropZone* Cell = Cast<ADropZone>(TargetActor);
-			UE_LOG(LogTemp, Display, TEXT("Target name %s"), *TargetActor->GetName());
 			if (!Cell)
 				break;
 			TargetActors.Add(Cell);
+			break;
 		}
 	}
+	UE_LOG(LogTemp, Display, TEXT("Target Actors num %d"), TargetActors.Num());
 
 	return StartLocation.MakeTargetDataHandleFromActors(TargetActors,
 	                                                    SelectionType == ESelectionType::Hero ||
