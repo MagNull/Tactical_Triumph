@@ -57,6 +57,23 @@ bool UHeroAbilitySystemComponent::CanActivateAbilityWithTag(FGameplayTagContaine
 	return TagAbilitySpec->Ability->CanActivateAbility(TagAbilitySpec->Handle, AbilityActorInfo.Get());
 }
 
+void UHeroAbilitySystemComponent::RemoveGameplayEffect(FGameplayEffectSpecHandle Effect)
+{
+	TArray<FActiveGameplayEffectHandle> ActiveEffectHandles = GetActiveGameplayEffects().
+		GetActiveEffects({});
+	TArray<const FActiveGameplayEffect*> TargetActiveEffects;
+	for (auto ActiveEffectHandle : ActiveEffectHandles)
+	{
+		const FActiveGameplayEffect* ActiveEffect = GetActiveGameplayEffect(ActiveEffectHandle);
+		if (ActiveEffect->Spec.GetContext().GetInstigator() ==
+			Effect.Data->GetContext().GetInstigator() &&
+			ActiveEffect->Spec.Def == Effect.Data->Def)
+		{
+			RemoveActiveGameplayEffect(ActiveEffect->Handle);
+		}
+	}
+}
+
 void UHeroAbilitySystemComponent::OnEffectApplied(UAbilitySystemComponent* ASC, const FGameplayEffectSpec& EffectSpec,
                                                   FActiveGameplayEffectHandle ActiveEffectHandle)
 {

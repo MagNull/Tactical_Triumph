@@ -20,7 +20,7 @@ void UPlayerAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 	Super::PostGameplayEffectExecute(Data);
 	if (Data.EvaluatedData.Attribute == GetActionPointsAttribute())
 	{
-		const float ClampedActionPointsCount = FMath::Clamp(GetActionPoints(), 0, 1000);
+		const float ClampedActionPointsCount = FMath::Clamp(GetActionPoints(), 0, GetMaxActionPoints());
 		SetActionPoints(ClampedActionPointsCount);
 	
 		APlayerPawn* PlayerPawn = Cast<APlayerPawn>(GetOwningAbilitySystemComponent()->GetOwner());

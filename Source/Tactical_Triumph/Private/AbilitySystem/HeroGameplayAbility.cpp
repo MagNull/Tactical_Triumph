@@ -74,6 +74,5 @@ FSquadAbility UHeroGameplayAbility::GetSquadAbility(TSubclassOf<UGameplayAbility
 
 FSquadEffect UHeroGameplayAbility::GetSquadEffect(FGameplayEffectSpecHandle SpecHandle) const
 {
-	UE_LOG(LogTemp, Display, TEXT("Get Effect"));
 	return FSquadEffect{SpecHandle, GetClass()};
 }

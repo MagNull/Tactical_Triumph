@@ -2,6 +2,7 @@
 
 #include "AbilitySystemComponent.h"
 #include "AbilitySystem/Hero.h"
+#include "AbilitySystem/HeroAbilitySystemComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 ADropZone::ADropZone()
@@ -43,11 +44,11 @@ void ADropZone::SetHero(AHero* NewHero)
 	CurrentHero->SetActorLocation(HeroSpawnPoint->GetComponentLocation());
 	OnSetHero.Broadcast(NewHero);
 
-	ApplyGrantedTag(CurrentHero);
 	for (auto ZoneEffect : ZoneEffectPairs)
 	{
 		CurrentHero->GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*ZoneEffect.Key.Data.Get());
 	}
+	ApplyGrantedTag(CurrentHero);
 }
 
 bool ADropZone::IsCenter()
@@ -74,6 +75,15 @@ void ADropZone::RemoveZoneEffect(TSubclassOf<UGameplayAbility> Ability)
 	}
 	for (auto Tuple : ToRemove)
 	{
+		if (CurrentHero)
+		{
+			UHeroAbilitySystemComponent* ASC = Cast<UHeroAbilitySystemComponent>(
+				CurrentHero->GetAbilitySystemComponent());
+			if (ASC)
+			{
+				ASC->RemoveGameplayEffect(Tuple.Key);
+			}
+		}
 		ZoneEffectPairs.Remove(Tuple);
 	}
 }
@@ -88,7 +98,6 @@ void ADropZone::ApplyGrantedTag(AHero* Hero)
 
 void ADropZone::RemoveGrantedTag(AHero* Hero)
 {
-	UE_LOG(LogTemp, Display, TEXT("Start Removing"));
 	if (!Hero)
 	{
 		return;
@@ -116,24 +125,16 @@ void ADropZone::RemoveGrantedTag(AHero* Hero)
 
 void ADropZone::RemoveZoneEffectsFromHero(AHero* Hero)
 {
-	UAbilitySystemComponent* AbilitySystemComponent = Hero->GetAbilitySystemComponent();
-	TArray<FActiveGameplayEffectHandle> ActiveEffectHandles = AbilitySystemComponent->GetActiveGameplayEffects().
-		GetActiveEffects({});
+	UHeroAbilitySystemComponent* AbilitySystemComponent = Cast<UHeroAbilitySystemComponent>(
+		Hero->GetAbilitySystemComponent());
+	if (!AbilitySystemComponent)
+	{
+		UE_LOG(LogTemp, Error, TEXT("ADropZone::RemoveZoneEffectsFromHero ASC is null"));
+		return;
+	}
 	for (auto ZoneEffect : ZoneEffectPairs)
 	{
-		const FActiveGameplayEffect* TargetActiveEffect = nullptr;
-		for (auto ActiveEffectHandle : ActiveEffectHandles)
-		{
-			const FActiveGameplayEffect* Effect = AbilitySystemComponent->GetActiveGameplayEffect(ActiveEffectHandle);
-			if (AbilitySystemComponent->GetActiveGameplayEffect(ActiveEffectHandle)->Spec.Def ==
-				ZoneEffect.Key.Data->Def)
-			{
-				TargetActiveEffect = Effect;
-				break;
-			}
-		}
-		if (TargetActiveEffect)
-			AbilitySystemComponent->RemoveActiveGameplayEffect(TargetActiveEffect->Handle);
+		AbilitySystemComponent->RemoveGameplayEffect(ZoneEffect.Key);
 	}
 }
 

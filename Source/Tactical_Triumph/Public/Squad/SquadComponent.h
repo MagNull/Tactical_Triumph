@@ -120,8 +120,6 @@ protected:
 	ADropZone* GetDropZone(ESquadRow row, ESquadColumn column) const;
 
 private:
-	
-	
 	AHero* FirstHeroInArray(TArray<AHero*> Heroes) const;
 
 private:
