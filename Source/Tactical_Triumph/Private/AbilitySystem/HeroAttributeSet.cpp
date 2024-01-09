@@ -67,7 +67,6 @@ void UHeroAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 		//TODO: Whats wrong
 		const float NewPresentDamage = FMath::Clamp(GetPresentDamage(), 0, 1000);
 		DeltaValue = GetPresentDamage() - NewPresentDamage;
-		UE_LOG(LogTemp, Display, TEXT("%s damage value %f"), *GetOwningActor()->GetName(), GetPresentDamage());
 		if (GetPresentDamage() < 0)
 			SetPresentDamage(0);
 		if (Target)
