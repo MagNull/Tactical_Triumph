@@ -55,11 +55,6 @@ bool ADropZone::IsCenter()
 	return Column == ESquadColumn::Mid && Row == ESquadRow::Flank;
 }
 
-APlayerPawn* ADropZone::GetPlayerOwner()
-{
-	return PlayerOwnerPawn;
-}
-
 void ADropZone::AddZoneEffect(const FGameplayEffectSpecHandle EffectHandle, UGameplayAbility* SourceAbility)
 {
 	ZoneEffectPairs.Add({EffectHandle, SourceAbility->GetClass()});
