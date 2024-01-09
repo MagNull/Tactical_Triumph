@@ -17,6 +17,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	bool CanActivateAbilityWithTag(FGameplayTagContainer TagContainer);
+
+	void RemoveGameplayEffect(FGameplayEffectSpecHandle Effect);
 	
 	virtual void BeginPlay() override;
 	virtual void BeginDestroy() override;

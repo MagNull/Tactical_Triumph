@@ -33,6 +33,10 @@ public:
 	FGameplayAttributeData ActionPoints;
 	ATTRIBUTE_ACCESSORS(UPlayerAttributeSet, ActionPoints);
 
+	UPROPERTY(BlueprintReadOnly, Category = "Attributes")
+	FGameplayAttributeData MaxActionPoints;
+	ATTRIBUTE_ACCESSORS(UPlayerAttributeSet, MaxActionPoints);
+
 	UPROPERTY(BlueprintReadOnly, Category = "Attributes", ReplicatedUsing = OnRep_ActionPoints)
 	FGameplayAttributeData ActionPointsRestoration;
 	ATTRIBUTE_ACCESSORS(UPlayerAttributeSet, ActionPointsRestoration);
