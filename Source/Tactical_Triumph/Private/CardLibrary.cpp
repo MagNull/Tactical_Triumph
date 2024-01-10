@@ -12,14 +12,14 @@ ACardLibrary::ACardLibrary()
 
 TArray<UHeroData*> ACardLibrary::LoadCards()
 {
-	UObjectLibrary* CardLibrary = UObjectLibrary::CreateLibrary(UHeroData::StaticClass(), false, true);
-	CardLibrary->AddToRoot();
-	CardLibrary->LoadAssetDataFromPath(FolderPathToAssets);
-	CardLibrary->LoadAssetsFromAssetData();
+	// UObjectLibrary* CardLibrary = UObjectLibrary::CreateLibrary(UHeroData::StaticClass(), false, true);
+	// CardLibrary->AddToRoot();
+	// CardLibrary->LoadAssetDataFromPath(FolderPathToAssets);
+	// CardLibrary->LoadAssetsFromAssetData();
 
-	TArray<UHeroData*> Cards;
-	CardLibrary->GetObjects(Cards);
-	UE_LOG(LogTemp, Warning, TEXT("Card size: %d"), Cards.Num());
+	// TArray<UHeroData*> Cards;
+	// CardLibrary->GetObjects(Cards);
+	UE_LOG(LogTemp, Warning, TEXT("Card size: %d"), HeroData.Num());
 
-	return Cards;
+	return HeroData;
 }

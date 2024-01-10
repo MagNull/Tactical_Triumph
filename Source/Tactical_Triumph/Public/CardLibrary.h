@@ -21,4 +21,7 @@ public:
 private:
 	UPROPERTY(EditAnywhere)
 	FString FolderPathToAssets;
+
+	UPROPERTY(EditAnywhere)
+	TArray<UHeroData*> HeroData;
 };
