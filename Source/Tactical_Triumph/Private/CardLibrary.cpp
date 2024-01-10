@@ -19,6 +19,7 @@ TArray<UHeroData*> ACardLibrary::LoadCards()
 
 	// TArray<UHeroData*> Cards;
 	// CardLibrary->GetObjects(Cards);
+
 	UE_LOG(LogTemp, Warning, TEXT("Card size: %d"), HeroData.Num());
 
 	return HeroData;

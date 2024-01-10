@@ -16,7 +16,7 @@ class TACTICAL_TRIUMPH_API UDeckComponent : public UActorComponent
 
 public:
 	UDeckComponent();
-
+	
 	UFUNCTION(BlueprintCallable)
 	int GetCount() const;
 
@@ -28,7 +28,11 @@ protected:
 
 private:
 	UPROPERTY(EditAnywhere)
-	ACardLibrary* CardLibrary;
+	TArray<UHeroData*> HeroData;
+	// UPROPERTY(EditAnywhere)
+	// ACardLibrary* CardLibrary;
 
 	TArray<class UHeroData*> CardsInDeck;
+	bool isInit = false;
+
 };

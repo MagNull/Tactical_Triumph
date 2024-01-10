@@ -16,6 +16,7 @@ class TACTICAL_TRIUMPH_API ACardLibrary : public AActor
 public:	
 	ACardLibrary();
 
+	UFUNCTION(BlueprintCallable)
 	TArray<UHeroData*> LoadCards();
 
 private:

@@ -10,7 +10,7 @@ UDeckComponent::UDeckComponent()
 void UDeckComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	CardsInDeck = CardLibrary->LoadCards();
+	//CardsInDeck = HeroData;
 }
 
 int UDeckComponent::GetCount() const
@@ -20,6 +20,13 @@ int UDeckComponent::GetCount() const
 
 UHeroData* UDeckComponent::Pop()
 {
+	if(!isInit)
+	{
+		isInit = true;
+		CardsInDeck = HeroData;
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(
+									 TEXT("Cards load with %d"), CardsInDeck.Num()));
+	}
 	if (CardsInDeck.Num() == 0)
 	{
 		return nullptr;
