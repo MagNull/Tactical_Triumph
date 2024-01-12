@@ -1,0 +1,110 @@
+#include "AbilitySystem/HeroAbilitySystemComponent.h"
+
+
+void UHeroAbilitySystemComponent::SetAbilitySquadLineMap(TMap<FGameplayTag, TSubclassOf<UHeroGameplayAbility>> map)
+{
+	TagToAbilityMap = map;
+}
+
+void UHeroAbilitySystemComponent::BeginPlay()
+{
+	Super::BeginPlay();
+	EffectAppliedHandle = OnGameplayEffectAppliedDelegateToSelf.AddUObject(
+		this, &UHeroAbilitySystemComponent::OnEffectApplied);
+}
+
+void UHeroAbilitySystemComponent::BeginDestroy()
+{
+	Super::BeginDestroy();
+	OnGameplayEffectAppliedDelegateToSelf.Remove(EffectAppliedHandle);
+}
+
+TArray<FActiveGameplayEffectHandle> UHeroAbilitySystemComponent::GetActiveGameplayEffectsByAbility(
+	const UGameplayAbility* InstigatorAbility) const
+{
+	TArray<FActiveGameplayEffectHandle> Result;
+	const TArray<FActiveGameplayEffectHandle> EffectsContainer = GetActiveEffects({});
+	for (auto EffectSpecHandle : EffectsContainer)
+	{
+		FGameplayEffectContextHandle ContextHandle = GetActiveGameplayEffect(EffectSpecHandle)->Spec.GetContext();
+		const UGameplayAbility* EffectInstigatorAbility = ContextHandle.GetAbility();
+		if (EffectInstigatorAbility &&
+			EffectInstigatorAbility->GetClass() == InstigatorAbility->GetClass())
+		{
+			Result.Add(EffectSpecHandle);
+		}
+	}
+	return Result;
+}
+
+bool UHeroAbilitySystemComponent::CanActivateAbilityWithTag(FGameplayTagContainer TagContainer)
+{
+	TArray<FGameplayAbilitySpec> AbilitySpecs = GetActivatableAbilities();
+	FGameplayAbilitySpec* TagAbilitySpec = nullptr;
+	for (auto AbilitySpec : AbilitySpecs)
+	{
+		if (AbilitySpec.Ability->AbilityTags.HasAll(TagContainer))
+		{
+			TagAbilitySpec = &AbilitySpec;
+			break;
+		}
+	}
+	if (TagAbilitySpec == nullptr)
+	{
+		return false;
+	}
+
+	return TagAbilitySpec->Ability->CanActivateAbility(TagAbilitySpec->Handle, AbilityActorInfo.Get());
+}
+
+void UHeroAbilitySystemComponent::RemoveGameplayEffect(FGameplayEffectSpecHandle Effect)
+{
+	TArray<FActiveGameplayEffectHandle> ActiveEffectHandles = GetActiveGameplayEffects().
+		GetActiveEffects({});
+	TArray<const FActiveGameplayEffect*> TargetActiveEffects;
+	for (auto ActiveEffectHandle : ActiveEffectHandles)
+	{
+		const FActiveGameplayEffect* ActiveEffect = GetActiveGameplayEffect(ActiveEffectHandle);
+		if (ActiveEffect->Spec.GetContext().GetInstigator() ==
+			Effect.Data->GetContext().GetInstigator() &&
+			ActiveEffect->Spec.Def == Effect.Data->Def)
+		{
+			RemoveActiveGameplayEffect(ActiveEffect->Handle);
+		}
+	}
+}
+
+void UHeroAbilitySystemComponent::OnEffectApplied(UAbilitySystemComponent* ASC, const FGameplayEffectSpec& EffectSpec,
+                                                  FActiveGameplayEffectHandle ActiveEffectHandle)
+{
+	if (!EffectSpec.DynamicGrantedTags.HasAnyExact(PositionTags))
+		return;
+
+	for (auto TagAbilityPair : TagToAbilityMap)
+	{
+		UHeroGameplayAbility* Ability = TagAbilityPair.Value.GetDefaultObject();
+
+		//Clear all this ability duplicates
+		TArray<FGameplayAbilitySpec> Abilities = GetActivatableAbilities();
+		for (auto AbilitySpec : Abilities)
+		{
+			if (AbilitySpec.Ability.GetClass() == Ability->GetClass())
+			{
+				ClearAbility(AbilitySpec.Handle);
+			}
+		}
+
+		if (ASC->HasAnyMatchingGameplayTags(TagAbilityPair.Key.GetSingleTagContainer()))
+		{
+			if (Ability->AbilityTags.HasAny(ActivableAbilityTags))
+			{
+				FGameplayAbilitySpecHandle AbilitySpec = GiveAbility(Ability);
+				TryActivateAbility(AbilitySpec);
+			}
+			else
+			{
+				GiveAbility(Ability);
+			}
+		}
+	}
+}
